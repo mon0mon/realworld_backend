@@ -1,0 +1,23 @@
+@author = author
+@favorited = favorited
+@tag = tag
+
+### All Articles
+GET http://localhost:8080/articles
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Author
+GET http://localhost:8080/articles?author={{author}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles Favorited by Username
+GET http://localhost:8080/articles?favorited={{favorited}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Tag
+GET http://localhost:8080/articles?tag={{tag}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest

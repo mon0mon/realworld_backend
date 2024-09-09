@@ -1,0 +1,62 @@
+### Register
+POST http://localhost:8080/users
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "user": {
+    "email": "user@example.com",
+    "password": "password",
+    "username": "username"
+  }
+}
+
+### Login
+POST http://localhost:8080/users/login
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "user": {
+    "email": "user@example.com",
+    "password": "password"
+  }
+}
+
+> {%
+  client.global.set("auth_token", response.headers.valuesOf('x-auth-token')[0]);
+%}
+
+### Login and Remeber Token
+POST http://localhost:8080/users/login
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "user": {
+    "email": "user@example.com",
+    "password": "password"
+  }
+}
+
+> {%
+  client.global.set("auth_token", response.headers.valuesOf('x-auth-token')[0]);
+%}
+
+### Current User
+GET http://localhost:8080/user
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+### Update User
+PUT http://localhost:8080/user
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "user": {
+    "email": "user@example.com"
+  }
+}

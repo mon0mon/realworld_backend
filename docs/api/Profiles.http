@@ -1,0 +1,41 @@
+@host = http://localhost:8080
+@email = user@example.com
+@password = password
+@username = username
+
+### Register Celeb
+POST {{host}}/users
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+{
+  "user": {
+    "email": {{email}},
+    "password": {{password}},
+    "username": {{username}}
+  }
+}
+
+### Profile
+GET {{host}}/profiles/celeb_{{username}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+### Follow Profile
+POST {{host}}/profiles/celeb_{{username}}/follow
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "user": {
+    "email": {{email}}
+  }
+}
+
+### Unfollow Profile
+DELETE {{host}}/profiles/celeb_{{username}}/follow
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
