@@ -1,5 +1,3 @@
-@host = http://localhost:8080
-
 ### All Tags
 GET {{host}}/tags
 Content-Type: application/json
