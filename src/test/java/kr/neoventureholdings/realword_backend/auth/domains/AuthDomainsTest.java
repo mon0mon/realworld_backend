@@ -1,0 +1,90 @@
+package kr.neoventureholdings.realword_backend.auth.domains;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import java.util.Set;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+public class AuthDomainsTest {
+
+  private static Validator validator;
+
+  @BeforeAll
+  public static void setUp() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    validator = factory.getValidator();
+  }
+
+  @Test
+  @DisplayName("User Validation 테스트 1 - pass")
+  void UserValidationTest() {
+    User user = User.builder()
+        .email("test@example.com")
+        .username("testUser")
+        .password("password")
+        .build();
+
+    Set<ConstraintViolation<User>> validations = validator.validate(user);
+    Assertions.assertThat(validations.isEmpty())
+        .isEqualTo(true);
+  }
+
+  @Test
+  @DisplayName("User Validation 테스트 2 - email")
+  void UserValidationTest2() {
+    User user = User.builder()
+        .email("isNotAnEmail")
+        .username("testUser")
+        .password("password")
+        .build();
+
+    Set<ConstraintViolation<User>> validations = validator.validate(user);
+    Assertions.assertThat(
+        validations
+            .stream()
+            .filter(validate -> validate.getMessageTemplate().equals("{jakarta.validation.constraints.Email.message}"))
+            .count())
+        .isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("User Validation 테스트 3 - username")
+  void UserValidationTest3() {
+    User user = User.builder()
+        .email("test@example.com")
+        .username("asdf")
+        .password("password")
+        .build();
+
+    Set<ConstraintViolation<User>> validations = validator.validate(user);
+    Assertions.assertThat(
+            validations
+                .stream()
+                .filter(validate -> validate.getMessageTemplate().equals("{jakarta.validation.constraints.Size.message}"))
+                .count())
+        .isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("User Validation 테스트 4 - password")
+  void UserValidationTest4() {
+    User user = User.builder()
+        .email("test@example.com")
+        .username("testUser")
+        .password("")
+        .build();
+
+    Set<ConstraintViolation<User>> validations = validator.validate(user);
+    Assertions.assertThat(
+            validations
+                .stream()
+                .filter(validate -> validate.getMessageTemplate().equals("{jakarta.validation.constraints.NotEmpty.message}"))
+                .count())
+        .isEqualTo(1);
+  }
+}
