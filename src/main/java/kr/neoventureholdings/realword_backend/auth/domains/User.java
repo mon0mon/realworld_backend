@@ -1,10 +1,13 @@
 package kr.neoventureholdings.realword_backend.auth.domains;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,18 +21,24 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Email
   @NotEmpty
+  @Column
   private String email;
-  @Size(min = 5, max = 20)
   @NotEmpty
+  @Column
   private String username;
   @NotEmpty
+  @Column
   private String password;
+  @Column
   private String image;
+  @Column
   private String bio;
 
   public UserResponseDto userResponseDto() {
