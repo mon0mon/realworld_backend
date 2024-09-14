@@ -23,8 +23,6 @@ public class UserResponseDto {
   @Size(min = 5, max = 20)
   @NotEmpty
   private String username;
-  @NotEmpty
-  private String password;
   private String image;
   private String bio;
 }
