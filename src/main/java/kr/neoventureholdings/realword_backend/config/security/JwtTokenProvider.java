@@ -25,36 +25,33 @@ import java.util.*;
 @Slf4j
 public class JwtTokenProvider {
 
-  private static final String Token = "Token ";
   private static final String ACCESS_TOKEN = "access_token";
   private static final String REFRESH_TOKEN = "refresh_token";
-  private static final String EMAIL = "email";
-  private static final String USERNAME = "username";
   private final JwtConfig jwtConfig;
 
-  public AccessTokenResponseDto createAccessToken(String username) {
+  public AccessTokenResponseDto createAccessToken(Long userId) {
     Instant expiresAt = Instant.now().plusSeconds(Long.parseLong(jwtConfig.getAccessTokenExpire()));
-    String accessToken = Token + JWT.create()
+    String accessToken = JWT.create()
+        .withClaim("user", Map.of("id", userId))
         .withSubject(ACCESS_TOKEN)
         .withIssuer("RealWorld")
         .withIssuedAt(Date.from(Instant.now()))
         .withExpiresAt(Date.from(expiresAt))
-        .withClaim(USERNAME, username)
         .sign(jwtConfig.getEncodedSecretKey());
-    return new AccessTokenResponseDto(accessToken, expiresAt.getNano());
+    return new AccessTokenResponseDto(accessToken);
   }
 
-  public AccessTokenResponseDto createRefreshToken(String username) {
+  public AccessTokenResponseDto createRefreshToken(Long userId) {
     Instant expiresAt = Instant.now()
         .plusSeconds(Long.parseLong(jwtConfig.getRefreshTokenExpire()));
     String refreshToken = JWT.create()
+        .withClaim("user", Map.of("id", userId))
         .withSubject(REFRESH_TOKEN)
         .withIssuer("RealWorld")
         .withIssuedAt(Date.from(Instant.now()))
         .withExpiresAt(Date.from(expiresAt))
-        .withClaim(USERNAME, username)
         .sign(jwtConfig.getEncodedSecretKey());
-    return new AccessTokenResponseDto(refreshToken, expiresAt.getNano());
+    return new AccessTokenResponseDto(refreshToken);
   }
 
   /**
@@ -70,10 +67,12 @@ public class JwtTokenProvider {
 
     DecodedJWT decodedJWT = verifier.verify(token);
 
+    Map<String, Object> userClaim = decodedJWT.getClaim("user").asMap();
+    Long userId = ((Number) userClaim.get("id")).longValue();
     Boolean isAccessToken = decodedJWT.getSubject().equals(ACCESS_TOKEN);
 
     return JWTInfo.builder()
-        .username(decodedJWT.getClaim(USERNAME).asString())
+        .userId(userId)
         .isAccessToken(isAccessToken)
         .build();
   }
@@ -83,8 +82,13 @@ public class JwtTokenProvider {
 
     DecodedJWT decodedJWT = verifier.verify(refreshToken);
 
+    Map<String, Object> userClaim = decodedJWT.getClaim("user").asMap();
+    Long userId = ((Number) userClaim.get("id")).longValue();
+    Boolean isAccessToken = decodedJWT.getSubject().equals(ACCESS_TOKEN);
+
     return JWTInfo.builder()
-        .username(decodedJWT.getClaim(USERNAME).asString())
+        .userId(userId)
+        .isAccessToken(isAccessToken)
         .build();
   }
 
@@ -115,7 +119,7 @@ public class JwtTokenProvider {
   @ToString
   public static class JWTInfo {
 
-    private final String username;
+    private final Long userId;
     private final Boolean isAccessToken;
   }
 }
