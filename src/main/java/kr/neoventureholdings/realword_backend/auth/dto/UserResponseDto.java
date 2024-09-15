@@ -1,5 +1,7 @@
 package kr.neoventureholdings.realword_backend.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -25,4 +27,6 @@ public class UserResponseDto {
   private String username;
   private String image;
   private String bio;
+  @JsonInclude(Include.NON_EMPTY)
+  private String token;
 }
