@@ -49,4 +49,14 @@ public class User {
         .image(image)
         .build();
   }
+
+  public UserResponseDto userResponseDto(String token) {
+    return UserResponseDto.builder()
+        .username(username)
+        .email(email)
+        .bio(bio)
+        .image(image)
+        .token(token)
+        .build();
+  }
 }
