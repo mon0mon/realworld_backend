@@ -30,5 +30,5 @@ spring:
 
 jwt:
   secretKey: secretKey
-  accessTokenExpire: 86400
-  refreshTokenExpire: 2592000
+  accessTokenExpire: 300
+  refreshTokenExpire: 1800
