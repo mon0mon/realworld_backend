@@ -1,6 +1,6 @@
 package kr.neoventureholdings.realword_backend.auth.controller;
 
-import jakarta.validation.Valid;
+import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.service.UserService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,8 +31,14 @@ public class AuthController {
    * @return
    */
   @PostMapping("/users")
-  public ResponseEntity<String> registerUser() {
-    return new ResponseEntity<>("OK", HttpStatus.OK);
+  public ResponseEntity<CommonResponseDto> registerUser(@Validated(UserRequestDto.Registration.class) @RequestBody CommonRequestDto commonRequestDto) {
+    UserRequestDto userRequestDto = commonRequestDto.getUser();
+    return ResponseEntity
+        .ok()
+        .body(CommonResponseDto.builder()
+            .userResponseDto(userService.register(userRequestDto))
+            .build()
+        );
   }
 
   /**
@@ -51,7 +58,7 @@ public class AuthController {
    * @return
    */
   @PostMapping("/users/login")
-  public ResponseEntity<CommonResponseDto> login(@Valid @RequestBody CommonRequestDto commonRequestDto) {
+  public ResponseEntity<CommonResponseDto> login(@Validated(UserRequestDto.Login.class) @RequestBody CommonRequestDto commonRequestDto) {
     UserResponseDto userResponseDto = userService.login(commonRequestDto.getUser());
 
     return ResponseEntity
