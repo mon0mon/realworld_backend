@@ -42,7 +42,8 @@ public class SecurityConfiguration {
       CustomAuthorizationFilter customAuthorizationFilter) throws Exception {
     httpSecurity.authorizeHttpRequests((authz) ->
         authz
-            .requestMatchers("/h2-console").permitAll()
+            .requestMatchers("/*").permitAll()
+            .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/users/login").permitAll()
             .requestMatchers("/users").permitAll()
             .anyRequest().authenticated());
