@@ -3,8 +3,7 @@ package kr.neoventureholdings.realword_backend.auth.service;
 import java.util.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
-import kr.neoventureholdings.realword_backend.auth.dto.UserLoginRequestDto;
-import kr.neoventureholdings.realword_backend.auth.dto.UserRegisterRequestDto;
+import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;
 import kr.neoventureholdings.realword_backend.config.security.CustomUserDetailsService;
@@ -28,7 +27,7 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
-  public void register(UserRegisterRequestDto requestDto) {
+  public void register(UserRequestDto requestDto) {
     findUserByUsername(requestDto.getUsername());
     userRepository.save(requestDto.toUser(passwordEncoder));
   }
@@ -38,9 +37,9 @@ public class UserService {
     return user.userResponseDto();
   }
 
-  public UserResponseDto login(UserLoginRequestDto requestDto) {
-    User user = findUserByUsernameAndPassword(requestDto.getUsername(), requestDto.getPassword());
-    return user.userResponseDto();
+  public UserResponseDto login(UserRequestDto requestDto) {
+    User user = findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
+    return user.userResponseDto(getAccessToken(user.getId()));
   }
 
   public UserResponseDto update() {
@@ -48,11 +47,15 @@ public class UserService {
   }
 
   private User fromJwtInfo(JWTInfo jwtInfo) {
-    return findUserByUsername(jwtInfo.getUsername());
+    return findUserById(jwtInfo.getUserId());
   }
 
-  public AccessTokenResponseDto getAccessToken(UserResponseDto userResponseDto) {
-    return jwtTokenProvider.createAccessToken(userResponseDto.getUsername());
+  public AccessTokenResponseDto getAccessToken(User user) {
+    return jwtTokenProvider.createAccessToken(user.getId());
+  }
+
+  public String getAccessToken(Long userId) {
+    return jwtTokenProvider.createAccessToken(userId).getToken();
   }
 
   //  TODO ExceptionHandler로 처리하도록
@@ -61,8 +64,13 @@ public class UserService {
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
   }
 
-  private User findUserByUsernameAndPassword(String username, String password) {
-    return userRepository.findByUsernameAndPassword(username, password)
+  private User findUserByEmailAndPassword(String email, String password) {
+    return userRepository.findByEmailAndPassword(email, password)
         .orElseThrow(() -> new LoginException("UsernamePassword Authentication Failed"));
+  }
+
+  private User findUserById(Long id) {
+    return userRepository.findById(id)
+        .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
   }
 }
