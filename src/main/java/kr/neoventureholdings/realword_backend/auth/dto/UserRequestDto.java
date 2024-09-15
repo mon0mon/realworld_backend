@@ -18,12 +18,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Builder
 public class UserRequestDto {
-  @Email
-  @NotBlank
+  @Email(groups = {Registration.class, Login.class})
+  @NotBlank(groups = {Registration.class, Login.class})
   private String email;
-  @NotBlank
+  @NotBlank(groups = {Registration.class})
   private String username;
-  @NotBlank
+  @NotBlank(groups = {Registration.class, Login.class})
   private String password;
   private String image;
   private String bio;
@@ -37,4 +37,8 @@ public class UserRequestDto {
         .bio(bio)
         .build();
   }
+
+  //  Validation Groups
+  public interface Registration {}
+  public interface Login {}
 }
