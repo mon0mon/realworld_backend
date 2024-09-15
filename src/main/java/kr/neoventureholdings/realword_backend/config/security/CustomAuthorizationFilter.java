@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,12 +24,13 @@ import java.util.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
-//@Component
+@Component
 @RequiredArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
-  private final JwtTokenProvider jwtTokenProvider;
   private static final String TOKEN = "Token ";
+  private final JwtTokenProvider jwtTokenProvider;
+  private final CustomUserDetailsService userDetailsService;
 
   private final List<String> EXCLUDE_URL_LIST =
       List.of(
@@ -40,7 +42,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    log.info("필터 타는지 확인 여부 : {}", request.getRequestURL());
     return EXCLUDE_URL.contains(request.getRequestURI());
   }
 
@@ -57,23 +58,18 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     JWTInfo jwtInfo = null;
     if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
       jwtInfo = jwtTokenProvider.decodeToken(token);
-      SecurityContextHolder.getContext().setAuthentication(getAuthenticationToken(jwtInfo));
+
+      CustomUserDetail userDetail = userDetailsService.loadUserById(jwtInfo.getUserId());
+      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+          userDetail, null, userDetail.getAuthorities());
+      authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     } else {
-      log.info("유효한 JWT토큰이 없습니다.");
+      log.debug("[Security] : 유효한 JWT토큰이 없습니다.");
     }
 
     filterChain.doFilter(request, response);
-  }
-
-  private UsernamePasswordAuthenticationToken getAuthenticationToken(JWTInfo jwtInfo) {
-    return new UsernamePasswordAuthenticationToken(
-        CustomUserDetail.of(
-            User.builder()
-                .username(jwtInfo.getUsername())
-                .build()
-        ),
-        null
-    );
   }
 
   private static void getAccessTokenExpired(HttpServletResponse response,
@@ -88,5 +84,4 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   private String getToken(String tokenHeader) {
     return tokenHeader.substring(TOKEN.length());
   }
-
 }
