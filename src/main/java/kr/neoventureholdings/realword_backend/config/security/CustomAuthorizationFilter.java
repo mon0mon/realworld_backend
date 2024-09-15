@@ -1,13 +1,10 @@
 package kr.neoventureholdings.realword_backend.config.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.config.security.JwtTokenProvider.JWTInfo;
-import kr.neoventureholdings.realword_backend.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -70,15 +67,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     }
 
     filterChain.doFilter(request, response);
-  }
-
-  private static void getAccessTokenExpired(HttpServletResponse response,
-      ErrorResponse errorResponse) throws IOException {
-    response.setStatus(errorResponse.getStatus());
-    Map<String, String> body = new HashMap<>();
-    body.put("status", Integer.toString(errorResponse.getStatus()));
-    response.setContentType(APPLICATION_JSON_VALUE);
-    new ObjectMapper().writeValue(response.getOutputStream(), body);
   }
 
   private String getToken(String tokenHeader) {
