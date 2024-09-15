@@ -16,6 +16,4 @@ import lombok.Setter;
 public class AccessTokenResponseDto {
   @NotEmpty
   private String token;
-  @NotNull
-  private Integer expiresTime;
 }
