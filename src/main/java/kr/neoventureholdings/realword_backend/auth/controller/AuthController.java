@@ -1,18 +1,15 @@
 package kr.neoventureholdings.realword_backend.auth.controller;
 
-import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
-import kr.neoventureholdings.realword_backend.auth.dto.UserLoginRequestDto;
+import jakarta.validation.Valid;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.service.UserService;
+import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
+import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
 import kr.neoventureholdings.realword_backend.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,13 +37,12 @@ public class AuthController {
   /**
    * 현재 로그인 한 사용자 정보
    *
-   * @param userDetails
+   * @param
    * @return
    */
   @GetMapping("/user")
-  public ResponseEntity<UserDetails> getCurrentUser(
-      @AuthenticationPrincipal UserDetails userDetails) {
-    return new ResponseEntity<>(userDetails, HttpStatus.OK);
+  public ResponseEntity<String> getCurrentUser() {
+    return new ResponseEntity<>("ok", HttpStatus.OK);
   }
 
   /**
@@ -54,26 +50,27 @@ public class AuthController {
    *
    * @return
    */
-  @PostMapping("/login")
-  public ResponseEntity<UserResponseDto> login(@RequestBody UserLoginRequestDto loginRequestDto) {
-    UserResponseDto userResponseDto = userService.login(loginRequestDto);
-    AccessTokenResponseDto renewedAccessToken = userService.getAccessToken(userResponseDto);
-    ResponseCookie accessTokenCookie = cookieUtil.setAccessToken(renewedAccessToken);
+  @PostMapping("/users/login")
+  public ResponseEntity<CommonResponseDto> login(@Valid @RequestBody CommonRequestDto commonRequestDto) {
+    UserResponseDto userResponseDto = userService.login(commonRequestDto.getUser());
 
     return ResponseEntity
         .ok()
-        .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
-        .body(userResponseDto);
+        .body(CommonResponseDto
+            .builder()
+            .userResponseDto(userResponseDto)
+            .build()
+        );
   }
 
   /**
    * 사용자 정보 업데이트
    *
-   * @param userDetails
+   * @param
    * @return
    */
   @PutMapping("/user")
-  public ResponseEntity<UserDetails> updateUser(@AuthenticationPrincipal UserDetails userDetails) {
-    return new ResponseEntity<>(userDetails, HttpStatus.OK);
+  public ResponseEntity<String> updateUser() {
+    return new ResponseEntity<>("ok", HttpStatus.OK);
   }
 }
