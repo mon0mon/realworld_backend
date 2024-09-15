@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RealwordBackendApplication {
+public class RealworldBackendApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(RealwordBackendApplication.class, args);
+    SpringApplication.run(RealworldBackendApplication.class, args);
   }
 
 }
