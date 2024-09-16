@@ -1,4 +1,4 @@
-package kr.neoventureholdings.realword_backend.config.security;
+package kr.neoventureholdings.realword_backend.config.security.authentication;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

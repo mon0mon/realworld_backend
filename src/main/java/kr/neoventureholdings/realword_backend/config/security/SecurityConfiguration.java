@@ -1,9 +1,9 @@
-package kr.neoventureholdings.realword_backend.config;
+package kr.neoventureholdings.realword_backend.config.security;
 
 import java.util.Arrays;
 import java.util.List;
-import kr.neoventureholdings.realword_backend.config.security.CustomAuthenticationProvider;
-import kr.neoventureholdings.realword_backend.config.security.CustomAuthorizationFilter;
+import kr.neoventureholdings.realword_backend.config.security.authentication.CustomAuthenticationProvider;
+import kr.neoventureholdings.realword_backend.config.security.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;

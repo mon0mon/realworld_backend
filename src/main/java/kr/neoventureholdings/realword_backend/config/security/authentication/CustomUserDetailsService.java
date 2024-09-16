@@ -1,4 +1,4 @@
-package kr.neoventureholdings.realword_backend.config.security;
+package kr.neoventureholdings.realword_backend.config.security.authentication;
 
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;

@@ -1,4 +1,4 @@
-package kr.neoventureholdings.realword_backend.config.security;
+package kr.neoventureholdings.realword_backend.config.security.jwt;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC256;
 

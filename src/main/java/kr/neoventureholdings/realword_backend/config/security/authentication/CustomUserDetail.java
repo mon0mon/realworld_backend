@@ -1,4 +1,4 @@
-package kr.neoventureholdings.realword_backend.config.security;
+package kr.neoventureholdings.realword_backend.config.security.authentication;
 
 import java.io.Serializable;
 import java.util.Collection;
