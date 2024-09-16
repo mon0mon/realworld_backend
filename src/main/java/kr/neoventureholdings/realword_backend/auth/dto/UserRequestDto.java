@@ -2,6 +2,7 @@ package kr.neoventureholdings.realword_backend.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import kr.neoventureholdings.realword_backend.auth.domains.Profile;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,13 +30,21 @@ public class UserRequestDto {
   private String bio;
 
   public User toUser(PasswordEncoder passwordEncoder) {
-    return User.builder()
+    Profile profile = Profile.builder()
         .username(this.username)
-        .password(passwordEncoder.encode(this.password))
-        .email(this.email)
-        .image(image)
-        .bio(bio)
+        .bio(this.bio)
+        .image(this.image)
         .build();
+
+    User user = User.builder()
+        .password( passwordEncoder.encode(this.password))
+        .email(this.email)
+        .profile(profile)
+        .build();
+
+    profile.setUser(user);
+
+    return user;
   }
 
   //  Validation Groups
