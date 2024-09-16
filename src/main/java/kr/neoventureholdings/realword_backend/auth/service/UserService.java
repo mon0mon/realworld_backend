@@ -37,6 +37,10 @@ public class UserService {
     return findUserByCustomUserDetail(customUserDetail).userResponseDto();
   }
 
+  public User getUser(CustomUserDetail customUserDetail) {
+    return findUserByCustomUserDetail(customUserDetail);
+  }
+
   @Transactional
   public UserResponseDto login(UserRequestDto requestDto) {
     User user = findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());

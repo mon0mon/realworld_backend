@@ -1,5 +1,6 @@
 package kr.neoventureholdings.realword_backend.auth.service;
 
+import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
@@ -28,7 +29,12 @@ public class FacadeUserService {
   }
 
   @Transactional(readOnly = true)
-  public UserResponseDto getCurrentUser(CustomUserDetail customUserDetail) {
+  public UserResponseDto getCurrentUserResponseDto(CustomUserDetail customUserDetail) {
     return userService.getUserDto(customUserDetail);
+  }
+
+  @Transactional(readOnly = true)
+  public User getCurrentUser(CustomUserDetail customUserDetail) {
+    return userService.getUser(customUserDetail);
   }
 }
