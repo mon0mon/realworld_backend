@@ -1,4 +1,4 @@
-package kr.neoventureholdings.realword_backend.config.security;
+package kr.neoventureholdings.realword_backend.config.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -101,15 +101,17 @@ public class JwtTokenProvider {
       JWT.require(jwtConfig.getEncodedSecretKey()).build().verify(token);
       return true;
     } catch (SignatureException e) { // 유효하지 않은 JWT 서명
-      log.info("not valid jwt signature");
+      log.info("Not Valid JWT Signature");
     } catch (MalformedJwtException e) { // 유효하지 않은 JWT
-      log.info("not valid jwt");
+      log.info("Not Valid JWT");
     } catch (ExpiredJwtException e) { // 만료된 JWT
-      log.info("expired jwt");
+      log.info("Expired JWT");
     } catch (UnsupportedJwtException e) { // 지원하지 않는 JWT
-      log.info("unsupported jwt");
+      log.info("Unsupported JWT");
     } catch (IllegalArgumentException e) { // 빈값
-      log.info("empty jwt");
+      log.info("Empty JWT");
+    } catch (JWTVerificationException e) {
+      log.info("JWT 인증 오류");
     }
     return false;
   }
