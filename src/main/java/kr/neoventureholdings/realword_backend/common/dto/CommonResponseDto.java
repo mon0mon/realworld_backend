@@ -1,10 +1,10 @@
 package kr.neoventureholdings.realword_backend.common.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
+import kr.neoventureholdings.realword_backend.profile.dto.ProfileResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +20,6 @@ import lombok.Setter;
 public class CommonResponseDto {
   @JsonProperty("user")
   private UserResponseDto userResponseDto;
+  @JsonProperty("profile")
+  private ProfileResponseDto profileResponseDto;
 }
