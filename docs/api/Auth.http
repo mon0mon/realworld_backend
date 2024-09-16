@@ -5,9 +5,9 @@ X-Requested-With: XMLHttpRequest
 
 {
   "user": {
-    "email": "{{user.email}}",
-    "password": "{{user.password}}",
-    "username": "{{user.username}}"
+    "email": "{{register_user.email}}",
+    "password": "{{register_user.password}}",
+    "username": "{{register_user.username}}"
   }
 }
 
