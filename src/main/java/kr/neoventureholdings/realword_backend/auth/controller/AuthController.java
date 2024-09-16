@@ -50,7 +50,7 @@ public class AuthController {
    */
   @GetMapping("/user")
   public ResponseEntity<CommonResponseDto> getCurrentUser(@AuthenticationPrincipal CustomUserDetail userDetail) {
-    UserResponseDto userDto = userService.getCurrentUser(userDetail);
+    UserResponseDto userDto = userService.getCurrentUserResponseDto(userDetail);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
