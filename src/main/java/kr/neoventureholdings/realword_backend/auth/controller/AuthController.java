@@ -2,7 +2,7 @@ package kr.neoventureholdings.realword_backend.auth.controller;
 
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
-import kr.neoventureholdings.realword_backend.auth.service.UserService;
+import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
 import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final UserService userService;
+  private final FacadeUserService userService;
 
   /**
    * 신규 이용자 등록
@@ -50,7 +50,7 @@ public class AuthController {
    */
   @GetMapping("/user")
   public ResponseEntity<CommonResponseDto> getCurrentUser(@AuthenticationPrincipal CustomUserDetail userDetail) {
-    UserResponseDto userDto = userService.getUserDto(userDetail.getUsername());
+    UserResponseDto userDto = userService.getCurrentUser(userDetail);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
@@ -87,7 +87,7 @@ public class AuthController {
    */
   @PutMapping("/user")
   public ResponseEntity<CommonResponseDto> updateUser(
-      @Validated(UserRequestDto.Update.class) @RequestBody CommonRequestDto commonRequestDto,
+      @RequestBody CommonRequestDto commonRequestDto,
       @RequestAttribute("access_token") String accessToken) {
     UserResponseDto userResponseDto = userService.update(commonRequestDto.getUser(),
         accessToken);
