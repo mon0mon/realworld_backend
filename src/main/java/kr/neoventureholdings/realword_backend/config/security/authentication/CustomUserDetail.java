@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +18,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Slf4j
 @Getter
+@Setter
 public class CustomUserDetail implements UserDetails, Serializable {
 
   private Long id;
   private String email;
   private String username;
   private String password;
+  private String token;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -51,7 +54,7 @@ public class CustomUserDetail implements UserDetails, Serializable {
 
   public static CustomUserDetail of(User user) {
     return CustomUserDetail.builder()
-        .username(user.getUsername())
+        .username(user.getProfile().getUsername())
         .password(user.getPassword())
         .email(user.getEmail())
         .id(user.getId())
