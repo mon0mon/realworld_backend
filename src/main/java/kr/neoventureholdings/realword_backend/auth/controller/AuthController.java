@@ -5,15 +5,16 @@ import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.service.UserService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
 import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
-import kr.neoventureholdings.realword_backend.util.CookieUtil;
+import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final UserService userService;
-  private final CookieUtil cookieUtil;
 
   /**
    * 신규 이용자 등록
@@ -31,7 +31,8 @@ public class AuthController {
    * @return
    */
   @PostMapping("/users")
-  public ResponseEntity<CommonResponseDto> registerUser(@Validated(UserRequestDto.Registration.class) @RequestBody CommonRequestDto commonRequestDto) {
+  public ResponseEntity<CommonResponseDto> registerUser(
+      @Validated(UserRequestDto.Registration.class) @RequestBody CommonRequestDto commonRequestDto) {
     UserRequestDto userRequestDto = commonRequestDto.getUser();
     return ResponseEntity
         .ok()
@@ -48,8 +49,15 @@ public class AuthController {
    * @return
    */
   @GetMapping("/user")
-  public ResponseEntity<String> getCurrentUser() {
-    return new ResponseEntity<>("ok", HttpStatus.OK);
+  public ResponseEntity<CommonResponseDto> getCurrentUser(@AuthenticationPrincipal CustomUserDetail userDetail) {
+    UserResponseDto userDto = userService.getUserDto(userDetail.getUsername());
+    return ResponseEntity
+        .ok()
+        .body(CommonResponseDto
+            .builder()
+            .userResponseDto(userDto)
+            .build()
+        );
   }
 
   /**
@@ -58,7 +66,8 @@ public class AuthController {
    * @return
    */
   @PostMapping("/users/login")
-  public ResponseEntity<CommonResponseDto> login(@Validated(UserRequestDto.Login.class) @RequestBody CommonRequestDto commonRequestDto) {
+  public ResponseEntity<CommonResponseDto> login(
+      @Validated(UserRequestDto.Login.class) @RequestBody CommonRequestDto commonRequestDto) {
     UserResponseDto userResponseDto = userService.login(commonRequestDto.getUser());
 
     return ResponseEntity
@@ -77,7 +86,18 @@ public class AuthController {
    * @return
    */
   @PutMapping("/user")
-  public ResponseEntity<String> updateUser() {
-    return new ResponseEntity<>("ok", HttpStatus.OK);
+  public ResponseEntity<CommonResponseDto> updateUser(
+      @Validated(UserRequestDto.Update.class) @RequestBody CommonRequestDto commonRequestDto,
+      @RequestAttribute("access_token") String accessToken) {
+    UserResponseDto userResponseDto = userService.update(commonRequestDto.getUser(),
+        accessToken);
+    return ResponseEntity
+        .ok()
+        .body(
+            CommonResponseDto
+                .builder()
+                .userResponseDto(userResponseDto)
+                .build()
+        );
   }
 }

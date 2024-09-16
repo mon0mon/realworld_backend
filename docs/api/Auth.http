@@ -55,6 +55,10 @@ Authorization: Token {{auth_token}}
 
 {
   "user": {
-    "email": "{{user.email}}"
+    "email": "{{update_user.email}}",
+    "username": "{{update_user.username}}",
+    "password": "{{update_user.password}}",
+    "image": "{{update_user.image}}",
+    "bio": "{{update_user.bio}}"
   }
 }
