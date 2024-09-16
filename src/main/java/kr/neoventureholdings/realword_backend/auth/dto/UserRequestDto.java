@@ -2,7 +2,7 @@ package kr.neoventureholdings.realword_backend.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import kr.neoventureholdings.realword_backend.auth.domains.Profile;
+import kr.neoventureholdings.realword_backend.profile.domains.Profile;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
