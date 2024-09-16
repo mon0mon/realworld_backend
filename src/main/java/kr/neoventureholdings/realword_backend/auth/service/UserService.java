@@ -6,6 +6,7 @@ import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;
+import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetailsService;
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.exception.auth.UserLoginException;
@@ -28,22 +29,24 @@ public class UserService {
 
   @Transactional
   public UserResponseDto register(UserRequestDto requestDto) {
-    checkUserExists(requestDto.getUsername());
+    checkUserExists(requestDto.getEmail());
     return userRepository.save(requestDto.toUser(passwordEncoder)).userResponseDto();
   }
 
-  public UserResponseDto getUserDto(String username) {
-    return findUserByUsername(username).userResponseDto();
+  public UserResponseDto getUserDto(CustomUserDetail customUserDetail) {
+    return findUserByCustomUserDetail(customUserDetail).userResponseDto();
   }
 
+  @Transactional
   public UserResponseDto login(UserRequestDto requestDto) {
     User user = findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
     return user.userResponseDto(getAccessToken(user.getId()));
   }
 
+  @Transactional
   public UserResponseDto update(UserRequestDto requestDto, String accessToken) {
     User user = fromAccessToken(accessToken);
-    user = user.of(requestDto);
+    user = user.of(requestDto, passwordEncoder);
     return userRepository.save(user).userResponseDto(getAccessToken(user.getId()));
   }
 
@@ -59,8 +62,8 @@ public class UserService {
     return jwtTokenProvider.createAccessToken(userId).getToken();
   }
 
-  private User findUserByUsername(String username) {
-    return userRepository.findByUsername(username)
+  private User findUserByCustomUserDetail(CustomUserDetail customUserDetail) {
+    return userRepository.findById(customUserDetail.getId())
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
   }
 
@@ -74,8 +77,13 @@ public class UserService {
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
   }
 
-  private User checkUserExists(String username) {
-    assert StringUtils.hasText(username);
-    return findUserByUsername(username);
+  private User findUserByEmail(String email) {
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
+  }
+
+  private boolean checkUserExists(String email) {
+    assert StringUtils.hasText(email);
+    return userRepository.findByEmail(email).isPresent();
   }
 }
