@@ -41,4 +41,5 @@ public class UserRequestDto {
   //  Validation Groups
   public interface Registration {}
   public interface Login {}
+  public interface Update {}
 }
