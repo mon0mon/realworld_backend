@@ -6,16 +6,15 @@ import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;
-import kr.neoventureholdings.realword_backend.config.security.CustomUserDetailsService;
-import kr.neoventureholdings.realword_backend.config.security.JwtTokenProvider;
-import kr.neoventureholdings.realword_backend.config.security.JwtTokenProvider.JWTInfo;
+import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetailsService;
+import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.exception.auth.UserLoginException;
-import kr.neoventureholdings.realword_backend.exception.auth.UserRegisterExcpetion;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -29,9 +28,7 @@ public class UserService {
 
   @Transactional
   public UserResponseDto register(UserRequestDto requestDto) {
-    if (findUserByUsername(requestDto.getUsername()) != null) {
-      throw new UserRegisterExcpetion("Already Registered User");
-    }
+    checkUserExists(requestDto.getUsername());
     return userRepository.save(requestDto.toUser(passwordEncoder)).userResponseDto();
   }
 
@@ -44,12 +41,14 @@ public class UserService {
     return user.userResponseDto(getAccessToken(user.getId()));
   }
 
-  public UserResponseDto update() {
-    return null;
+  public UserResponseDto update(UserRequestDto requestDto, String accessToken) {
+    User user = fromAccessToken(accessToken);
+    user = user.of(requestDto);
+    return userRepository.save(user).userResponseDto(getAccessToken(user.getId()));
   }
 
-  private User fromJwtInfo(JWTInfo jwtInfo) {
-    return findUserById(jwtInfo.getUserId());
+  private User fromAccessToken(String accessToken) {
+    return findUserById(jwtTokenProvider.decodeToken(accessToken).getUserId());
   }
 
   public AccessTokenResponseDto getAccessToken(User user) {
@@ -73,5 +72,10 @@ public class UserService {
   private User findUserById(Long id) {
     return userRepository.findById(id)
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
+  }
+
+  private User checkUserExists(String username) {
+    assert StringUtils.hasText(username);
+    return findUserByUsername(username);
   }
 }

@@ -8,12 +8,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -31,7 +33,7 @@ public class User {
   @Column
   private String email;
   @NotEmpty
-  @Column
+  @Column(unique = true)
   private String username;
   @NotEmpty
   @Column
@@ -43,20 +45,31 @@ public class User {
 
   public UserResponseDto userResponseDto() {
     return UserResponseDto.builder()
-        .username(username)
-        .email(email)
-        .bio(bio)
-        .image(image)
+        .username(getUsername())
+        .email(getEmail())
+        .bio(getBio())
+        .image(getImage())
         .build();
   }
 
   public UserResponseDto userResponseDto(String token) {
     return UserResponseDto.builder()
-        .username(username)
-        .email(email)
-        .bio(bio)
-        .image(image)
+        .username(getUsername())
+        .email(getEmail())
+        .bio(getBio())
+        .image(getImage())
         .token(token)
+        .build();
+  }
+
+  public User of(UserRequestDto requestDto) {
+    return User.builder()
+        .id(getId())
+        .username(StringUtils.hasText(requestDto.getUsername()) ? requestDto.getUsername() : getUsername())
+        .email(StringUtils.hasText(requestDto.getEmail()) ? requestDto.getEmail() : getEmail())
+        .password(StringUtils.hasText(requestDto.getPassword()) ? requestDto.getPassword() : getPassword())
+        .bio(StringUtils.hasText(requestDto.getBio()) ? requestDto.getBio() : getBio())
+        .image(StringUtils.hasText(requestDto.getImage()) ? requestDto.getImage() : getImage())
         .build();
   }
 }
