@@ -30,7 +30,7 @@ public class User {
   private Long id;
   @Email
   @NotEmpty
-  @Column
+  @Column(unique = true)
   private String email;
   @NotEmpty
   @Column(unique = true)

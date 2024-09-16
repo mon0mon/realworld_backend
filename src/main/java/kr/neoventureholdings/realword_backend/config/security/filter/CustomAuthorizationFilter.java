@@ -80,7 +80,9 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     JWTInfo jwtInfo = null;
     jwtInfo = jwtTokenProvider.decodeToken(token);
 
+    String parsedToken = token.replace("token ", "");
     CustomUserDetail userDetail = userDetailsService.loadUserById(jwtInfo.getUserId());
+    userDetail.setToken(parsedToken);
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
         userDetail, null, userDetail.getAuthorities());
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -89,7 +91,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     assert token != null;
     if (jwtInfo.getIsAccessToken()) {
-      request.setAttribute(TokenConstant.ACCESS_TOKEN, token.replace("token ", ""));
+      request.setAttribute(TokenConstant.ACCESS_TOKEN, parsedToken);
     }
 
     filterChain.doFilter(request, response);
