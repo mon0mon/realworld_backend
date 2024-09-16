@@ -12,12 +12,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.neoventureholdings.realword_backend.TestConstant;
-import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.constant.TokenConstant;
 import kr.neoventureholdings.realword_backend.util.AuthTestUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -36,20 +33,10 @@ class AuthControllerTest {
   @Autowired
   private MockMvc mockMvc;
   private final static ObjectMapper objectMapper = new ObjectMapper();
-  private User user;
 
   @BeforeAll
   static void beforeAll() {
     objectMapper.setSerializationInclusion(Include.NON_NULL);
-  }
-
-  @BeforeEach
-  void beforeEach() {
-    user = User.builder()
-        .email(TestConstant.EMAIL)
-        .username(TestConstant.USERNAME)
-        .password(TestConstant.PASSWORD)
-        .build();
   }
 
   @Test
