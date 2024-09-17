@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface FollowRepository extends JpaRepository<Follow, Long> {
   public Optional<Follow> findById(Long id);
   public Set<Follow> findFollowsByFollower(User follower);
-  public Set<Follow> findFollowsByFollowee(User Followee);
+  public Set<Follow> findFollowsByFollowee(User followee);
+  public Optional<Follow> findByFolloweeAndFollower(User followee, User follower);
 }

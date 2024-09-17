@@ -30,30 +30,48 @@ public class ProfileService {
     return profile.of(user);
   }
 
-  public ProfileResponseDto followUser(String username, CustomUserDetail customUserDetail) {
+  public ProfileResponseDto followUser(String followeeUsername, CustomUserDetail customUserDetail) {
     assert customUserDetail != null;
 
-    Profile profile = getProfileByUsername(username);
+    Profile profile = getProfileByUsername(followeeUsername);
+    User targetUser = profile.getUser();
+
+    User user = facadeUserService.getCurrentUser(customUserDetail);
+
+    if (isFollowing(user, targetUser)) {
+      return profile.of(user);
+    }
+
+    return profile.of(user);
+  }
+
+  public ProfileResponseDto unfollowUser(String followeeUsername, CustomUserDetail customUserDetail) {
+    assert customUserDetail != null;
+
+    Profile profile = getProfileByUsername(followeeUsername);
 
     User user = facadeUserService.getCurrentUser(customUserDetail);
 
     return profile.of(user);
   }
 
-  public ProfileResponseDto unfollowUser(String username, CustomUserDetail customUserDetail) {
-    assert customUserDetail != null;
+  private boolean isFollowing(User user, String followeeUsername) {
+    return isFollowing(user, getProfileByUsername(followeeUsername).getUser());
+  }
 
-    Profile profile = getProfileByUsername(username);
-
-    //  TODO Follow 기능이 추가될 때 마저 작성
-
-    User user = facadeUserService.getCurrentUser(customUserDetail);
-
-    return profile.of(user);
+  private boolean isFollowing(User user, User targetUser) {
+    return user.getFollowees()
+        .stream()
+        .anyMatch(followee ->
+            followee.equals(targetUser));
   }
 
   private Profile getProfileByUsername(String username) {
     return profileRepository.findByUsername(username)
         .orElseThrow(() -> new NoSuchElementException("No Profile Found"));
   }
+
+//  private User followGivenUsername(String followeeUsername, String followerUsername) {
+//    return
+//  }
 }

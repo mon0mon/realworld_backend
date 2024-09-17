@@ -37,4 +37,8 @@ public class FacadeUserService {
   public User getCurrentUser(CustomUserDetail customUserDetail) {
     return userService.getUser(customUserDetail);
   }
+
+  public User getRefreshedUser(User user) {
+    return userService.getRefreshUser(user);
+  }
 }
