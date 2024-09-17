@@ -6,6 +6,8 @@ erDiagram
     User ||--|{ Article : "User Article"
     User ||--|{ Comment : "User Comment"
     User ||--|{ Follow : "User Follow"
+    User ||--|{ Favorite : "User Favorite Article"
+    Favorite }|--|| Article : "Article Favorite"
     Article ||--|{ Comment : "Articles-Comment"
     Article ||--|| Tags : "Articles-Tags"
     Tags ||--|{ Tag : "Tags-Tag"
@@ -24,14 +26,19 @@ erDiagram
     Article {
         number id PK
         number user_id FK "User"
-        number author_id FK "Profile"
         number tags_id FK "Tags"
         string title
+        string description
         string body
         string description
         string slug "URL"
         datetime createdAt
         datetime updatedAt
+    }
+    Favorite {
+        number id PK
+        number user_id "User"
+        number article_id "Article"
     }
     Follow {
         number id PK

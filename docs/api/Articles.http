@@ -17,3 +17,36 @@ X-Requested-With: XMLHttpRequest
 GET {{host}}/articles?tag={{tag}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
+
+### Create Articles
+POST {{host}}/articles
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "article": {
+    "title": "{{article.title}}",
+    "description": "{{article.description}}",
+    "body": "{{article.body}}",
+    "tagList": {{article.tagList}}
+  }
+}
+
+### Update Article
+PUT {{host}}/articles/{{slug}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "article": {
+    "body": "With two hands"
+  }
+}
+
+### Delete Article
+DELETE {{host}}/articles/{{slug}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
