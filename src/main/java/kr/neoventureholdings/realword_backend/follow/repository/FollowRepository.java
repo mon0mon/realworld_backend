@@ -1,8 +1,8 @@
-package kr.neoventureholdings.realword_backend.auth.repository;
+package kr.neoventureholdings.realword_backend.follow.repository;
 
 import java.util.Optional;
 import java.util.Set;
-import kr.neoventureholdings.realword_backend.auth.domains.Follow;
+import kr.neoventureholdings.realword_backend.follow.domains.Follow;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
