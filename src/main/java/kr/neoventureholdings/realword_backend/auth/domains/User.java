@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
@@ -51,13 +51,21 @@ public class User {
   @NotNull
   @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
   private Profile profile;
-  @ManyToMany(fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "follow",
       joinColumns = @JoinColumn(name = "follower_user_id"),
       inverseJoinColumns = @JoinColumn(name = "followee_user_id")
   )
   private Set<User> followees;
+
+  public void addFollowee(User user) {
+    followees.add(user);
+  }
+
+  public void removeFollowee(User user) {
+    followees.remove(user);
+  }
 
   public UserResponseDto userResponseDto() {
     return UserResponseDto.builder()
