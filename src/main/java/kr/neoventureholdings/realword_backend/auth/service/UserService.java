@@ -66,6 +66,11 @@ public class UserService {
     return jwtTokenProvider.createAccessToken(userId).getToken();
   }
 
+  public User getRefreshUser(User user) {
+    return userRepository.findById(user.getId())
+        .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
+  }
+
   private User findUserByCustomUserDetail(CustomUserDetail customUserDetail) {
     return userRepository.findById(customUserDetail.getId())
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
