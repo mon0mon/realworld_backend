@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
+import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.profile.domains.Profile;
@@ -58,6 +59,12 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "followee_user_id")
   )
   private Set<User> followees;
+  @OneToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "article",
+      joinColumns = @JoinColumn(name = "user_id")
+  )
+  private Set<Article> articles;
 
   public void addFollowee(User user) {
     followees.add(user);
