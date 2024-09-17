@@ -2,6 +2,7 @@ package kr.neoventureholdings.realword_backend.profile.domains;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,7 +33,7 @@ public class Profile {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotNull
-  @OneToOne
+  @OneToOne(fetch = FetchType.EAGER)
   private User user;
   @NotBlank
   @Column(name = "username", unique = true)
@@ -42,21 +43,16 @@ public class Profile {
   @Column
   private String image;
 
-  //  TODO 현재 Following 중인지 체크하는 로직 추가 필요
   public ProfileResponseDto of(User user) {
     return ProfileResponseDto
         .builder()
         .bio(getBio())
         .username(getUsername())
         .image(getImage())
-        .following(user == null ?
-            false : user
-            .getFollowees()
+        .following(user != null && user.getFollowees()
             .stream()
-            .anyMatch(follwee ->
-                follwee.getProfile().getUsername().equals(getUsername())
-            )
-        )
+            .anyMatch(followee -> followee.getProfile().equals(this))
+          )
         .build();
   }
 }
