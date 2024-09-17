@@ -5,6 +5,8 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
+import kr.neoventureholdings.realword_backend.TestConstant;
+import kr.neoventureholdings.realword_backend.profile.domains.Profile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -24,9 +26,12 @@ public class AuthDomainsTest {
   @DisplayName("User Validation 테스트 1 - pass")
   void UserValidationTest() {
     User user = User.builder()
-        .email("test@example.com")
-        .username("testUser")
-        .password("password")
+        .email(TestConstant.EMAIL)
+        .password(TestConstant.PASSWORD)
+        .profile(Profile
+            .builder()
+            .username(TestConstant.USERNAME)
+            .build())
         .build();
 
     Set<ConstraintViolation<User>> validations = validator.validate(user);
@@ -39,7 +44,6 @@ public class AuthDomainsTest {
   void UserValidationTest2() {
     User user = User.builder()
         .email("isNotAnEmail")
-        .username("testUser")
         .password("password")
         .build();
 
@@ -53,29 +57,10 @@ public class AuthDomainsTest {
   }
 
   @Test
-  @DisplayName("User Validation 테스트 3 - username")
-  void UserValidationTest3() {
-    User user = User.builder()
-        .email("test@example.com")
-        .username("asdf")
-        .password("password")
-        .build();
-
-    Set<ConstraintViolation<User>> validations = validator.validate(user);
-    Assertions.assertThat(
-            validations
-                .stream()
-                .filter(validate -> validate.getMessageTemplate().equals("{jakarta.validation.constraints.Size.message}"))
-                .count())
-        .isEqualTo(1);
-  }
-
-  @Test
-  @DisplayName("User Validation 테스트 4 - password")
+  @DisplayName("User Validation 테스트 3 - password")
   void UserValidationTest4() {
     User user = User.builder()
         .email("test@example.com")
-        .username("testUser")
         .password("")
         .build();
 
