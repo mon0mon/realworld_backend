@@ -43,8 +43,8 @@ public class SecurityConfiguration {
         authz
             .requestMatchers("/*").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
-            .requestMatchers("/users/login").permitAll()
-            .requestMatchers("/users").permitAll()
+            .requestMatchers("/users/**").permitAll()
+            .requestMatchers("/profiles/*").permitAll()
             .anyRequest().authenticated());
 
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
