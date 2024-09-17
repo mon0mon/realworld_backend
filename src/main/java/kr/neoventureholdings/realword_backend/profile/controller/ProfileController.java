@@ -1,7 +1,7 @@
 package kr.neoventureholdings.realword_backend.profile.controller;
 
+import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
-import kr.neoventureholdings.realword_backend.profile.dto.ProfileResponseDto;
 import kr.neoventureholdings.realword_backend.profile.service.FacadeProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +29,14 @@ public class ProfileController {
    * @return
    */
   @GetMapping("/{username}")
-  public ResponseEntity<ProfileResponseDto> getProfile(@PathVariable("username") String username,
+  public ResponseEntity<CommonResponseDto> getProfile(@PathVariable("username") String username,
       @AuthenticationPrincipal CustomUserDetail customUserDetail) {
     return ResponseEntity
         .ok()
-        .body(profileService.getProfile(username, customUserDetail));
+        .body(CommonResponseDto.builder()
+            .profileResponseDto(profileService.getProfile(username, customUserDetail))
+            .build()
+        );
   }
 
   /**
@@ -44,11 +47,14 @@ public class ProfileController {
    * @return
    */
   @PostMapping("/{username}/follow")
-  public ResponseEntity<ProfileResponseDto> followProfile(@PathVariable("username") String username,
+  public ResponseEntity<CommonResponseDto> followProfile(@PathVariable("username") String username,
       @AuthenticationPrincipal CustomUserDetail customUserDetail) {
     return ResponseEntity
         .ok()
-        .body(profileService.followUser(username, customUserDetail));
+        .body(CommonResponseDto.builder()
+            .profileResponseDto(profileService.followUser(username, customUserDetail))
+            .build()
+        );
   }
 
   /**
@@ -59,11 +65,14 @@ public class ProfileController {
    * @return
    */
   @DeleteMapping("/{username}/follow")
-  public ResponseEntity<ProfileResponseDto> unfollowProfile(
+  public ResponseEntity<CommonResponseDto> unfollowProfile(
       @PathVariable("username") String username,
       @AuthenticationPrincipal CustomUserDetail customUserDetail) {
     return ResponseEntity
         .ok()
-        .body(profileService.unfollowUser(username, customUserDetail));
+        .body(CommonResponseDto.builder()
+            .profileResponseDto(profileService.unfollowUser(username, customUserDetail))
+            .build()
+        );
   }
 }
