@@ -30,11 +30,11 @@ public class UserService {
   @Transactional
   public UserResponseDto register(UserRequestDto requestDto) {
     checkUserExists(requestDto.getEmail());
-    return userRepository.save(requestDto.toUser(passwordEncoder)).userResponseDto();
+    return userRepository.save(requestDto.toUser(passwordEncoder)).to();
   }
 
   public UserResponseDto getUserDto(CustomUserDetail customUserDetail) {
-    return findUserByCustomUserDetail(customUserDetail).userResponseDto();
+    return findUserByCustomUserDetail(customUserDetail).to();
   }
 
   public User getUser(CustomUserDetail customUserDetail) {
@@ -44,14 +44,14 @@ public class UserService {
   @Transactional
   public UserResponseDto login(UserRequestDto requestDto) {
     User user = findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
-    return user.userResponseDto(getAccessToken(user.getId()));
+    return user.to(getAccessToken(user.getId()));
   }
 
   @Transactional
   public UserResponseDto update(UserRequestDto requestDto, String accessToken) {
     User user = fromAccessToken(accessToken);
     user = user.of(requestDto, passwordEncoder);
-    return userRepository.save(user).userResponseDto(getAccessToken(user.getId()));
+    return userRepository.save(user).to(getAccessToken(user.getId()));
   }
 
   private User fromAccessToken(String accessToken) {

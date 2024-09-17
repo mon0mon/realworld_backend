@@ -74,7 +74,7 @@ public class User {
     followees.remove(user);
   }
 
-  public UserResponseDto userResponseDto() {
+  public UserResponseDto to() {
     return UserResponseDto.builder()
         .username(profile.getUsername())
         .email(getEmail())
@@ -83,7 +83,7 @@ public class User {
         .build();
   }
 
-  public UserResponseDto userResponseDto(String token) {
+  public UserResponseDto to(String token) {
     return UserResponseDto.builder()
         .username(profile.getUsername())
         .email(getEmail())
