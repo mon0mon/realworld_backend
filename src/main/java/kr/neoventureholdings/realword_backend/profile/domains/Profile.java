@@ -49,7 +49,14 @@ public class Profile {
         .bio(getBio())
         .username(getUsername())
         .image(getImage())
-        .following(user == null ? false : false)
+        .following(user == null ?
+            false : user
+            .getFollowees()
+            .stream()
+            .anyMatch(follwee ->
+                follwee.getProfile().getUsername().equals(getUsername())
+            )
+        )
         .build();
   }
 }
