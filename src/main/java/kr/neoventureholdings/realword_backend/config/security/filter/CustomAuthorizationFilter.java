@@ -15,9 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -36,20 +40,21 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   private final CustomUserDetailsService userDetailsService;
   private final ObjectMapper objectMapper;
 
-  private final List<String> EXCLUDE_URL_LIST =
-      List.of(
-          "/h2-console",
-          "/users"
-      );
+  private final List<RequestMatcher> excludeUrlMatchers = List.of(
+      new AntPathRequestMatcher("/h2-console/**"),
+      new AntPathRequestMatcher("/users/**")
+  );
 
-  private final HashSet<String> EXCLUDE_URL = new HashSet<>(EXCLUDE_URL_LIST);
+  private final List<RequestMatcher> authOptionalUrlMatchers = List.of(
+      new AntPathRequestMatcher("/profiles/*", "GET")
+  );
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    return EXCLUDE_URL
+    return excludeUrlMatchers
         .stream()
-        .anyMatch(url ->
-            request.getRequestURI().startsWith(url)
+        .anyMatch(matcher ->
+            matcher.matches(request)
         );
   }
 
@@ -64,9 +69,24 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
       token = getToken(authorizationHeader);
     }
 
-    //  인증 정보가 없을 경우 401 Unauthorized 리턴
-    //  https://www.realworld.how/specifications/backend/error-handling/
+    boolean isAuthOptional = authOptionalUrlMatchers
+        .stream()
+        .anyMatch(matcher
+            -> matcher.matches(request)
+        );
+
     if (!StringUtils.hasText(token) || !jwtTokenProvider.validateToken(token)) {
+      if (isAuthOptional) {
+        log.debug("[Security] : 인증정보 Optional ({})", request.getRequestURI());
+        CustomUserDetail anonymousUserDetail = new CustomUserDetail();
+        anonymousUserDetail.setAnonymous(true);
+        AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
+            "anonymousUser", anonymousUserDetail, Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS")));
+        SecurityContextHolder.getContext().setAuthentication(anonymousToken);
+        filterChain.doFilter(request, response);
+        return;
+      }
+
       log.info("[Security] : 유효한 JWT토큰이 없습니다.");
 
       ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED,
@@ -74,11 +94,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
       response.setStatus(errorResponse.getStatus().value());
       response.setContentType(APPLICATION_JSON_VALUE);
       objectMapper.writeValue(response.getOutputStream(), errorResponse);
-      filterChain.doFilter(request, response);
+      return;
     }
 
-    JWTInfo jwtInfo = null;
-    jwtInfo = jwtTokenProvider.decodeToken(token);
+    JWTInfo jwtInfo = jwtTokenProvider.decodeToken(token);
 
     String parsedToken = token.replace("token ", "");
     CustomUserDetail userDetail = userDetailsService.loadUserById(jwtInfo.getUserId());
@@ -89,7 +108,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    assert token != null;
     if (jwtInfo.getIsAccessToken()) {
       request.setAttribute(TokenConstant.ACCESS_TOKEN, parsedToken);
     }
