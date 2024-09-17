@@ -26,6 +26,7 @@ public class CustomUserDetail implements UserDetails, Serializable {
   private String username;
   private String password;
   private String token;
+  private boolean isAnonymous;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,6 +59,7 @@ public class CustomUserDetail implements UserDetails, Serializable {
         .password(user.getPassword())
         .email(user.getEmail())
         .id(user.getId())
+        .isAnonymous(false)
         .build();
   }
 }
