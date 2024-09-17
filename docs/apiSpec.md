@@ -20,9 +20,10 @@
   - /articles/slug
 
 - 모든 게시글 조회
-  - 작성자 필터링
+  - 작성자 필터링 (author)
   - pagination, limit
-  - 태그 필터링
+  - 태그 필터링 (tag)
+  - 특정 유저가 좋아요를 누른 게시글 (favorited)
 
 ### Articles, Favorite, Comments
 
