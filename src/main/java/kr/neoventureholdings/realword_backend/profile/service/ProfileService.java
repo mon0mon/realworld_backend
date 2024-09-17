@@ -21,7 +21,7 @@ public class ProfileService {
   public ProfileResponseDto getProfile(String username, CustomUserDetail customUserDetail) {
     Profile profile = getProfileByUsername(username);
 
-    if (customUserDetail == null) {
+    if (customUserDetail == null || customUserDetail.isAnonymous()) {
       return profile.of(null);
     }
 
@@ -34,8 +34,6 @@ public class ProfileService {
     assert customUserDetail != null;
 
     Profile profile = getProfileByUsername(username);
-
-    //  TODO Follow 기능이 추가될 때 마저 작성
 
     User user = facadeUserService.getCurrentUser(customUserDetail);
 
