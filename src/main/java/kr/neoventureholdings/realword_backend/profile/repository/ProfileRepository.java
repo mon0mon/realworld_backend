@@ -2,6 +2,7 @@ package kr.neoventureholdings.realword_backend.profile.repository;
 
 import java.util.Optional;
 import kr.neoventureholdings.realword_backend.profile.domains.Profile;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
   public Optional<Profile> findById(Long id);
   public Optional<Profile> findByUserId(Long userId);
+  @EntityGraph(attributePaths = {"user"})
   public Optional<Profile> findByUsername(String username);
 }
