@@ -1,7 +1,7 @@
 package kr.neoventureholdings.realword_backend.profile.controller;
 
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
-import kr.neoventureholdings.realword_backend.profile.service.ProfileService;
+import kr.neoventureholdings.realword_backend.profile.service.FacadeProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/profiles")
 public class ProfileController {
-  private final ProfileService profileService;
+  private final FacadeProfileService profileService;
 
   /**
    * 주어진 username에 해당하는 이용자의 프로필을 조회
