@@ -12,4 +12,7 @@ public class TestConstant {
   public static final String UPDATE_PASSWORD = "qwe";
   public static final String UPDATE_BIO = "Hello World!";
   public static final String UPDATE_IMAGE = "https://static-00.iconduck.com/assets.00/person-icon-2048x2048-wiaps1jt.png";
+  public static final String PROFILE_USERNAME = "celeb";
+  public static final String PROFILE_BIO = "Java is Awsome";
+  public static final String PROFILE_IMAGE = "https://simpleicons.org/icons/openjdk.svg";
 }
