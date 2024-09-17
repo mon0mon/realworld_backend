@@ -16,12 +16,16 @@
 
 ### Articles
 
+- 단일 게시글 조회
+  - /articles/slug
+
 - 모든 게시글 조회
-- 게시글 조회 (게시자 필터링)
-- 게시글 조회 ()
-- 게시글 조회 (태그 필터링)
+  - 작성자 필터링
+  - pagination, limit
+  - 태그 필터링
 
 ### Articles, Favorite, Comments
 
 - 게시글 등록
 - 피드
+  - 이용자 Followee가 작성한 게시글
