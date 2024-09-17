@@ -9,5 +9,6 @@ VALUES ((select id from users where email like 'user1@example.com'), 'user1');
 INSERT INTO users (email, password)
 VALUES ('celeb@example.com', '123');
 
-INSERT INTO profile (user_id, username)
-VALUES ((select id from users where email like 'celeb@example.com'), 'celeb');
+INSERT INTO profile (user_id, username, bio, image)
+VALUES ((select id from users where email like 'celeb@example.com'), 'celeb', 'Java is Awsome',
+        'https://simpleicons.org/icons/openjdk.svg');
