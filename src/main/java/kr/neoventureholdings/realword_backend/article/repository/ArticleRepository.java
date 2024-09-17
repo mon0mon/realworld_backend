@@ -12,5 +12,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
   @EntityGraph(value = "Article.withUser")
   public Optional<Article> findById(Long id);
   @EntityGraph(value = "Article.withUser")
-  public Optional<Article> findArticlesByUser(User user);
+  public Optional<Article> findArticlesByAuthor(User author);
+  @EntityGraph(value = "Article.withUser")
+  public Optional<Article> findArticleBySlug(String slug);
 }
