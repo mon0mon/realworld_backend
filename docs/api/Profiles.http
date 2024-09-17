@@ -23,12 +23,6 @@ Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
-{
-  "user": {
-    "email": "{{user.email}}"
-  }
-}
-
 ### Unfollow Profile
 DELETE {{host}}/profiles/{{profile.username}}/follow
 Content-Type: application/json
