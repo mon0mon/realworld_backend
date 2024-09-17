@@ -1,6 +1,7 @@
 package kr.neoventureholdings.realword_backend.exception.handler;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import java.sql.SQLException;
 import java.util.List;
 import kr.neoventureholdings.realword_backend.exception.ErrorResponse;
 import kr.neoventureholdings.realword_backend.exception.auth.AuthException;
@@ -35,6 +36,14 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleJwtTokenException(JWTDecodeException e) {
     log.error("JWT Token Decode Exception", e);
     ErrorResponse response = new ErrorResponse(HttpStatus.UNAUTHORIZED, List.of("Token Authentication Failed"));
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  @ExceptionHandler(SQLException.class)
+  public ResponseEntity<ErrorResponse> handleSqlException(SQLException e) {
+    log.error("SQL Exception", e);
+    ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+        List.of("Failed to Process SQL"));
     return new ResponseEntity<>(response, response.getStatus());
   }
 }
