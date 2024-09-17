@@ -12,13 +12,13 @@ X-Requested-With: XMLHttpRequest
 }
 
 ### Profile
-GET {{host}}/profiles/celeb_{{user.username}}
+GET {{host}}/profiles/{{profile.username}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
 ### Follow Profile
-POST {{host}}/profiles/celeb_{{user.username}}/follow
+POST {{host}}/profiles/{{profile.username}}/follow
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
@@ -30,7 +30,7 @@ Authorization: Token {{auth_token}}
 }
 
 ### Unfollow Profile
-DELETE {{host}}/profiles/celeb_{{user.username}}/follow
+DELETE {{host}}/profiles/{{profile.username}}/follow
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
