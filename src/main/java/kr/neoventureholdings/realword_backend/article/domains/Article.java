@@ -11,6 +11,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
+import java.util.List;
+import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
 import lombok.AllArgsConstructor;
@@ -48,4 +50,20 @@ public class Article extends BaseEntity {
   private String body;
   @Column(unique = true)
   private String slug;
+
+  public ArticleResponseDto to() {
+    return ArticleResponseDto
+        .builder()
+        .slug(getSlug())
+        .title(getTitle())
+        .description(getDescription())
+        .body(getBody())
+        .createAt(getCreatedAt())
+        .updatedAt(getUpdatedAt())
+        .favorited(null)
+        .favoritesCount(null)
+        .author(getAuthor().to())
+        .tags(List.of())
+        .build();
+  }
 }

@@ -23,7 +23,7 @@ public class ArticleResponseDto {
   private LocalDateTime createAt;
   private LocalDateTime updatedAt;
   private Boolean favorited;
-  private Integer facoritesCount;
+  private Integer favoritesCount;
   @JsonProperty("author")
   private UserResponseDto author;
   private List<String> tags;
