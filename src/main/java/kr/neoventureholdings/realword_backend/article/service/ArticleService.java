@@ -76,7 +76,7 @@ public class ArticleService {
     Article article = getArticleBySlug(slug);
 
     if (!article.getAuthor().equals(user)) {
-      throw new NoAuthorizationException("can't delete article. you are not a author");
+      throw new NoAuthorizationException("can't delete article. you are not an author");
     }
 
     articleRepository.delete(article);
