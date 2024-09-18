@@ -5,9 +5,9 @@ X-Requested-With: XMLHttpRequest
 
 {
   "user": {
-    "email": "{{register_user.email}}",
-    "password": "{{register_user.password}}",
-    "username": "{{register_user.username}}"
+    "email": "{{user.create.email}}",
+    "password": "{{user.create.password}}",
+    "username": "{{user.create.username}}"
   }
 }
 
@@ -18,8 +18,8 @@ X-Requested-With: XMLHttpRequest
 
 {
   "user": {
-    "email": "{{user.email}}",
-    "password": "{{user.password}}"
+    "email": "{{user.default.email}}",
+    "password": "{{user.default.password}}"
   }
 }
 
@@ -30,8 +30,8 @@ X-Requested-With: XMLHttpRequest
 
 {
   "user": {
-    "email": "{{user.email}}",
-    "password": "{{user.password}}"
+    "email": "{{user.default.email}}",
+    "password": "{{user.default.password}}"
   }
 }
 
@@ -55,10 +55,10 @@ Authorization: Token {{auth_token}}
 
 {
   "user": {
-    "email": "{{update_user.email}}",
-    "username": "{{update_user.username}}",
-    "password": "{{update_user.password}}",
-    "image": "{{update_user.image}}",
-    "bio": "{{update_user.bio}}"
+    "email": "{{user.update.email}}",
+    "username": "{{user.update.username}}",
+    "password": "{{user.update.password}}",
+    "image": "{{user.update.image}}",
+    "bio": "{{user.update.bio}}"
   }
 }
