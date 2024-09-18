@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     switch (e.getType()) {
       case NO_SUCH_ELEMENT ->
         response.setStatus(HttpStatus.NOT_FOUND);
-      case UNIQUE_CONSTRAINT_VIOLATION ->
+      case UNIQUE_CONSTRAINT_VIOLATION, ENTITY_ALREADY_EXISTS ->
         response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
