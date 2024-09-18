@@ -1,30 +1,17 @@
-### Register Celeb
-POST {{host}}/users
-Content-Type: application/json
-X-Requested-With: XMLHttpRequest
-
-{
-  "user": {
-    "email": "{{user.email}}",
-    "password": "{{user.password}}",
-    "username": "{{user.username}}"
-  }
-}
-
 ### Profile
-GET {{host}}/profiles/{{profile.username}}
+GET {{host}}/profiles/{{profile.default.username}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
 ### Follow Profile
-POST {{host}}/profiles/{{profile.username}}/follow
+POST {{host}}/profiles/{{profile.default.username}}/follow
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
 ### Unfollow Profile
-DELETE {{host}}/profiles/{{profile.username}}/follow
+DELETE {{host}}/profiles/{{profile.default.username}}/follow
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
