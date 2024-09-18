@@ -11,8 +11,12 @@ import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import kr.neoventureholdings.realword_backend.exception.auth.NoAuthorizationException;
+import kr.neoventureholdings.realword_backend.exception.common.EntityAlreadyExistsException;
 import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.exception.common.UniqueConstraintViolationException;
+import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
+import kr.neoventureholdings.realword_backend.favorite.dto.FavoriteDto;
+import kr.neoventureholdings.realword_backend.favorite.service.FacadeFavoriteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,8 +32,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
+
   private final ArticleRepository articleRepository;
   private final FacadeUserService facadeUserService;
+  private final FacadeFavoriteService favoriteService;
 
   public Article getArticle(String slug) {
     return getArticleBySlug(slug);
@@ -52,7 +58,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug, CustomUserDetail userDetail) {
+  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug,
+      CustomUserDetail userDetail) {
     User user = facadeUserService.getCurrentUser(userDetail);
 
     ArticleDto articleDto = ArticleDto.of(articleRequestDto);
@@ -80,6 +87,42 @@ public class ArticleService {
     }
 
     articleRepository.delete(article);
+  }
+
+  @Transactional
+  public void favoriteArticle(String slug, CustomUserDetail userDetail) {
+    User user = facadeUserService.getCurrentUser(userDetail);
+
+    Article article = getArticleBySlug(slug);
+
+    boolean isAlreadyFavorited = article.getFavorites()
+        .stream()
+        .anyMatch(fav -> fav.getUser().equals(user));
+
+    if (isAlreadyFavorited) {
+      throw new EntityAlreadyExistsException("Article is already favorited by the user");
+    }
+
+    favoriteService.saveFavorite(FavoriteDto.builder()
+        .article(article)
+        .user(user)
+        .build());
+  }
+
+  @Transactional
+  public void unfavoriteArticle(String slug, CustomUserDetail userDetail) {
+    User user = facadeUserService.getCurrentUser(userDetail);
+
+    Article article = getArticleBySlug(slug);
+
+    Favorite favorite = article.getFavorites()
+        .stream()
+        .filter(fav -> fav.getUser().equals(user))
+        .findAny()
+        .orElseThrow(() -> new EntityAlreadyExistsException(
+            "You haven't added this article to your favorites"));
+
+    favoriteService.deleteFavorite(favorite);
   }
 
   private Article getArticleBySlug(String slug) {
