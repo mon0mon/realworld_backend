@@ -103,3 +103,9 @@ DELETE {{host}}/articles/{{article.update.slug}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
+
+### Feed
+GET {{host}}/articles/feed
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}

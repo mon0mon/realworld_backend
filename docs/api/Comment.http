@@ -1,0 +1,28 @@
+### Create Comment for Article
+POST {{host}}/articles/{{slug}}/comments
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "comment": {
+    "body": "Thank you so much!"
+  }
+}
+
+### All Comments for Article
+GET {{host}}/articles/{{slug}}/comments
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+### All Comment for Article without login
+GET {{host}}/articles/{{slug}}/comments
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Delete Comment for Article
+DELETE {{host}}/articles/{{slug}}/comments/{{commentId}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
