@@ -1,3 +1,8 @@
+### Article
+GET {{host}}/articles/{{article.predefined.slug}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
 ### All Articles
 GET {{host}}/articles
 Content-Type: application/json
@@ -94,7 +99,7 @@ Authorization: Token {{auth_token}}
 }
 
 ### Delete Article
-DELETE {{host}}/articles/{{slug}}
+DELETE {{host}}/articles/{{article.update.slug}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
