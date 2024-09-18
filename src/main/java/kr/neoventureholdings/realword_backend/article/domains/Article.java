@@ -7,11 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import java.util.List;
+import java.util.Objects;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
@@ -20,6 +22,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
 @Getter
 @Setter
@@ -29,7 +32,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "article", indexes = {
     @Index(name = "idx_slug", columnList = "slug"),
-    @Index(name = "idx_user", columnList = "author")
+    @Index(name = "idx_author", columnList = "author_id")
 })
 @NamedEntityGraph(
     name = "Article.withUser",
@@ -40,9 +43,8 @@ public class Article extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //  Article에서는 User에 대해 반드시 조회하므로, FetchType.Eager에 EntityGraph 사용 할 것
   @ManyToOne(fetch = FetchType.EAGER)
-  @Column(name = "author")
+  @JoinColumn(name = "author_id", nullable = false)
   private User author;
 
   private String title;
@@ -65,5 +67,32 @@ public class Article extends BaseEntity {
         .author(getAuthor().to())
         .tags(List.of())
         .build();
+  }
+
+  @Override
+  public final boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    Class<?> oEffectiveClass = o instanceof HibernateProxy
+        ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+        : o.getClass();
+    Class<?> thisEffectiveClass = this instanceof HibernateProxy
+        ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass() : this.getClass();
+    if (thisEffectiveClass != oEffectiveClass) {
+      return false;
+    }
+    Article article = (Article) o;
+    return getId() != null && Objects.equals(getId(), article.getId());
+  }
+
+  @Override
+  public final int hashCode() {
+    return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer()
+        .getPersistentClass().hashCode() : getClass().hashCode();
   }
 }
