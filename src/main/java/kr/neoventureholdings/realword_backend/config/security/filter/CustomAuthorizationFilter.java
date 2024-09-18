@@ -14,6 +14,7 @@ import kr.neoventureholdings.realword_backend.exception.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +47,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   );
 
   private final List<RequestMatcher> authOptionalUrlMatchers = List.of(
-      new AntPathRequestMatcher("/profiles/*", "GET")
+      new AntPathRequestMatcher("/profiles/*", HttpMethod.GET.name()),
+      new AntPathRequestMatcher("/articles", HttpMethod.GET.name())
   );
 
   @Override
