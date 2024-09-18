@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
+import kr.neoventureholdings.realword_backend.favorite.dto.FavoriteDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,4 +34,11 @@ public class Favorite {
   @ManyToOne
   @JoinColumn(name = "article_id")
   private Article article;
+
+  public static Favorite of(FavoriteDto dto) {
+    return Favorite.builder()
+        .user(dto.getUser())
+        .article(dto.getArticle())
+        .build();
+  }
 }
