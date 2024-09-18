@@ -1,9 +1,9 @@
 package kr.neoventureholdings.realword_backend.profile.service;
 
-import java.util.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
+import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.follow.service.FacadeFollowService;
 import kr.neoventureholdings.realword_backend.profile.domains.Profile;
 import kr.neoventureholdings.realword_backend.profile.dto.ProfileResponseDto;

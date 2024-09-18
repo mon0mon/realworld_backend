@@ -1,6 +1,5 @@
 package kr.neoventureholdings.realword_backend.auth.service;
 
-import java.util.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
@@ -10,6 +9,7 @@ import kr.neoventureholdings.realword_backend.config.security.authentication.Cus
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetailsService;
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.exception.auth.UserLoginException;
+import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
