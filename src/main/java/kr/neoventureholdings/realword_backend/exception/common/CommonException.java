@@ -3,7 +3,7 @@ package kr.neoventureholdings.realword_backend.exception.common;
 import lombok.Getter;
 
 @Getter
-public class CommonException extends RuntimeException {
+public class CommonException extends CustomException {
   private final CommonExceptionType type;
 
   public CommonException(CommonExceptionType type) {
