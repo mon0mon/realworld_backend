@@ -103,10 +103,14 @@ public class ArticleService {
       throw new EntityAlreadyExistsException("Article is already favorited by the user");
     }
 
-    favoriteService.saveFavorite(FavoriteDto.builder()
+    FavoriteDto favoriteDto = FavoriteDto.builder()
         .article(article)
         .user(user)
-        .build());
+        .build();
+
+    article.addFavorite(favoriteDto.to());
+
+    favoriteService.saveFavorite(favoriteDto);
   }
 
   @Transactional
@@ -121,6 +125,8 @@ public class ArticleService {
         .findAny()
         .orElseThrow(() -> new EntityAlreadyExistsException(
             "You haven't added this article to your favorites"));
+
+    article.removeFavorite(favorite);
 
     favoriteService.deleteFavorite(favorite);
   }
