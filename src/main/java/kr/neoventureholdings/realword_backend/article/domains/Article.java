@@ -14,6 +14,7 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Objects;
+import kr.neoventureholdings.realword_backend.article.dto.ArticleDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
@@ -23,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.proxy.HibernateProxy;
+import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -52,6 +54,36 @@ public class Article extends BaseEntity {
   private String body;
   @Column(unique = true)
   private String slug;
+
+  public static Article of(ArticleDto dto, User user) {
+    return Article
+        .builder()
+        .title(dto.getTitle())
+        .body(dto.getBody())
+        .description(dto.getDescription())
+        .author(dto.getAuthor())
+        .slug(dto.getSlug())
+        .author(user)
+        .build();
+  }
+
+  public Article of(ArticleDto dto, boolean updateSlug) {
+    return Article
+        .builder()
+        .title(StringUtils.hasText(dto.getTitle()) ?
+            dto.getTitle() : getTitle()
+        )
+        .body(StringUtils.hasText(dto.getBody()) ?
+            dto.getBody() : getBody()
+        )
+        .description(StringUtils.hasText(dto.getDescription()) ?
+            dto.getDescription() : getDescription()
+        )
+        .slug((StringUtils.hasText(dto.getSlug()) && updateSlug) ?
+            dto.getSlug() : getSlug()
+        )
+        .build();
+  }
 
   public ArticleResponseDto to() {
     return ArticleResponseDto
