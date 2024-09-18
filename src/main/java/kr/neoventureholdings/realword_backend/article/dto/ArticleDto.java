@@ -1,8 +1,10 @@
 package kr.neoventureholdings.realword_backend.article.dto;
 
+import io.jsonwebtoken.lang.Strings;
 import java.util.List;
-import java.util.UUID;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
+import kr.neoventureholdings.realword_backend.constant.ArticleConstant;
+import kr.neoventureholdings.realword_backend.util.StringUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,18 +31,9 @@ public class ArticleDto {
         .body(requestDto.getBody())
         .description(requestDto.getDescription())
         .tagList(requestDto.getTagList())
-        .slug(UUID.randomUUID().toString())
-        .build();
-  }
-
-  public static ArticleDto of(ArticleRequestDto requestDto, String slug) {
-    return ArticleDto
-        .builder()
-        .title(requestDto.getTitle())
-        .body(requestDto.getBody())
-        .description(requestDto.getDescription())
-        .tagList(requestDto.getTagList())
-        .slug(slug)
+        .slug(Strings.hasText(requestDto.getTitle()) ? StringUtil.replaceAllSpecialCharacter(
+            requestDto.getTitle().toLowerCase(), ArticleConstant.SLUG_SEPERATOR, true) : null
+        )
         .build();
   }
 }
