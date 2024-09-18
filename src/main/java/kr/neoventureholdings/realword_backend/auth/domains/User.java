@@ -20,6 +20,7 @@ import java.util.Set;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
+import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
 import kr.neoventureholdings.realword_backend.profile.domains.Profile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -63,6 +64,8 @@ public class User {
   @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @BatchSize(size = 100)
   private Set<Article> articles;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+  private Set<Favorite> favorites;
 
   public void addFollowee(User user) {
     followees.add(user);

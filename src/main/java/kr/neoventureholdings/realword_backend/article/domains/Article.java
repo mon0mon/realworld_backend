@@ -11,13 +11,16 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
+import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,10 +39,11 @@ import org.springframework.util.StringUtils;
     @Index(name = "idx_slug", columnList = "slug"),
     @Index(name = "idx_author", columnList = "author_id")
 })
-@NamedEntityGraph(
-    name = "Article.withUser",
-    attributeNodes = @NamedAttributeNode("author")
-)
+@NamedEntityGraph(name= "Article.withUser", attributeNodes = @NamedAttributeNode("author"))
+@NamedEntityGraph(name = "Article.withUserAndFavorites", attributeNodes = {
+    @NamedAttributeNode("author"),
+    @NamedAttributeNode("favorites")
+})
 public class Article extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +58,8 @@ public class Article extends BaseEntity {
   private String body;
   @Column(unique = true)
   private String slug;
+  @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+  private Set<Favorite> favorites;
 
   public static Article of(ArticleDto dto, User user) {
     assert dto.getSlug() != null;
