@@ -5,7 +5,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.Set;
-import kr.neoventureholdings.realword_backend.TestConstant;
+import kr.neoventureholdings.realword_backend.auth.AuthTestConstant;
 import kr.neoventureholdings.realword_backend.profile.domains.Profile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,17 +26,17 @@ public class AuthDomainsTest {
   @DisplayName("User Validation 테스트 1 - pass")
   void UserValidationTest() {
     User user = User.builder()
-        .email(TestConstant.EMAIL)
-        .password(TestConstant.PASSWORD)
+        .email(AuthTestConstant.EMAIL)
+        .password(AuthTestConstant.PASSWORD)
         .profile(Profile
             .builder()
-            .username(TestConstant.USERNAME)
+            .username(AuthTestConstant.USERNAME)
             .build())
         .build();
 
     Set<ConstraintViolation<User>> validations = validator.validate(user);
-    Assertions.assertThat(validations.isEmpty())
-        .isEqualTo(true);
+    Assertions.assertThat(validations)
+        .isEmpty();
   }
 
   @Test

@@ -1,6 +1,6 @@
-package kr.neoventureholdings.realword_backend;
+package kr.neoventureholdings.realword_backend.auth;
 
-public class TestConstant {
+public class AuthTestConstant {
   public static final String EMAIL = "user1@example.com";
   public static final String USERNAME = "user1";
   public static final String PASSWORD = "123";
@@ -12,7 +12,4 @@ public class TestConstant {
   public static final String UPDATE_PASSWORD = "qwe";
   public static final String UPDATE_BIO = "Hello World!";
   public static final String UPDATE_IMAGE = "https://static-00.iconduck.com/assets.00/person-icon-2048x2048-wiaps1jt.png";
-  public static final String PROFILE_USERNAME = "celeb";
-  public static final String PROFILE_BIO = "Java is Awsome";
-  public static final String PROFILE_IMAGE = "https://simpleicons.org/icons/openjdk.svg";
 }
