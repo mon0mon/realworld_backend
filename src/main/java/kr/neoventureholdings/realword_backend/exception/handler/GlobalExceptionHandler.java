@@ -2,6 +2,7 @@ package kr.neoventureholdings.realword_backend.exception.handler;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import kr.neoventureholdings.realword_backend.exception.ErrorResponse;
 import kr.neoventureholdings.realword_backend.exception.auth.AuthException;
@@ -34,6 +35,8 @@ public class GlobalExceptionHandler {
     switch (e.getType()) {
       case NO_SUCH_ELEMENT ->
         response.setStatus(HttpStatus.NOT_FOUND);
+      case UNIQUE_CONSTRAINT_VIOLATION ->
+        response.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return new ResponseEntity<>(response, response.getStatus());
@@ -59,6 +62,14 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleJwtTokenException(JWTDecodeException e) {
     log.error("JWT Token Decode Exception", e);
     ErrorResponse response = new ErrorResponse(HttpStatus.UNAUTHORIZED, List.of("Token Authentication Failed"));
+    return new ResponseEntity<>(response, response.getStatus());
+  }
+
+  @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+  public ResponseEntity<ErrorResponse> handleSqlException(SQLIntegrityConstraintViolationException e) {
+    log.error("SQLIntegrityConstraintViolationException", e);
+    ErrorResponse response = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY,
+        List.of("SQL Integrity Constraint Violated"));
     return new ResponseEntity<>(response, response.getStatus());
   }
 

@@ -1,9 +1,10 @@
 package kr.neoventureholdings.realword_backend.exception.auth;
 
+import kr.neoventureholdings.realword_backend.exception.common.CustomException;
 import lombok.Getter;
 
 @Getter
-public class AuthException extends RuntimeException {
+public class AuthException extends CustomException {
   private final AuthExceptionType type;
 
   public AuthException(AuthExceptionType type) {
