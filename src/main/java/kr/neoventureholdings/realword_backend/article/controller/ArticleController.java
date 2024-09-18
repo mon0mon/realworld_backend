@@ -8,6 +8,7 @@ import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -100,6 +101,9 @@ public class ArticleController {
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
     articleService.deleteArticle(slug, userDetail);
-    return ResponseEntity.ok(null);
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(null);
   }
 }

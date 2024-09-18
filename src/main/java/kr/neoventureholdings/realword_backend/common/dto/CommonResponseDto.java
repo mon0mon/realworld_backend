@@ -3,6 +3,7 @@ package kr.neoventureholdings.realword_backend.common.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
@@ -26,6 +27,6 @@ public class CommonResponseDto {
   private ProfileResponseDto profileResponseDto;
   @JsonProperty("article")
   private ArticleResponseDto articleResponseDto;
-  @JsonProperty("articles")
+  @JsonUnwrapped
   private ArticleListResponseDto articleResponseDtoList;
 }
