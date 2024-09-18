@@ -12,3 +12,28 @@ VALUES ('celeb@example.com', '123');
 INSERT INTO profile (user_id, username, bio, image)
 VALUES ((select id from users where email like 'celeb@example.com'), 'celeb', 'Java is Awsome',
         'https://simpleicons.org/icons/openjdk.svg');
+
+-- Article 조회용 정보 추가
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'Java EE', 'Java Enterprise Edition',
+        'Java Platform, Enterprise Edition (Java EE) is the standard in community-driven enterprise software.');
+
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'Spring', 'Spring Framework',
+        'The Spring Framework is an application framework and inversion of control container for the Java platform.');
+
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'Node.js', 'Node.js',
+    'Node.js is a cross-platform, open-source JavaScript runtime environment.');
+
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'Next.js', 'The React Framework',
+    'Open-source web development framework React-based web applications with server-side rendering and static website generation.');
+
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'Struts', 'Apache Struts',
+    'Apache Struts is a free, open-source, MVC framework for creating elegant, modern Java web applications.');
+
+INSERT INTO article (author_id, title, description, body)
+values ((select id from users where email like 'celeb@example.com'), 'ASP.NET', 'ASP.NET',
+    'ASP.NET is a server-side web-application framework designed for web development to produce dynamic web pages.');
