@@ -48,7 +48,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
   private final List<RequestMatcher> authOptionalUrlMatchers = List.of(
       new AntPathRequestMatcher("/profiles/*", HttpMethod.GET.name()),
-      new AntPathRequestMatcher("/articles", HttpMethod.GET.name())
+      new AntPathRequestMatcher("/articles", HttpMethod.GET.name()),
+      new AntPathRequestMatcher("/articles/*", HttpMethod.GET.name())
   );
 
   @Override

@@ -45,6 +45,8 @@ public class SecurityConfiguration {
             .requestMatchers("/h2-console/**").permitAll()
             .requestMatchers("/users/**").permitAll()
             .requestMatchers("/profiles/*").permitAll()
+            .requestMatchers("/articles").permitAll()
+            .requestMatchers("/articles/*").permitAll()
             .anyRequest().authenticated());
 
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
