@@ -26,6 +26,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
@@ -59,11 +60,8 @@ public class User {
       inverseJoinColumns = @JoinColumn(name = "followee_user_id")
   )
   private Set<User> followees;
-  @OneToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "article",
-      joinColumns = @JoinColumn(name = "user_id")
-  )
+  @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @BatchSize(size = 100)
   private Set<Article> articles;
 
   public void addFollowee(User user) {
