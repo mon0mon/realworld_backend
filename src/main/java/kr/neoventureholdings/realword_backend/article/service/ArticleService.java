@@ -1,7 +1,6 @@
 package kr.neoventureholdings.realword_backend.article.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestDto;
@@ -10,6 +9,8 @@ import kr.neoventureholdings.realword_backend.article.repository.ArticleReposito
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
+import kr.neoventureholdings.realword_backend.exception.auth.NoAuthorizationException;
+import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
