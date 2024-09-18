@@ -2,19 +2,25 @@
 GET {{host}}/articles
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
+#Authorization: Token {{auth_token}}
 
-### Articles by Author
-GET {{host}}/articles?author={{author}}
+### Articles by Author celeb
+GET {{host}}/articles?author={{article.default.author}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Author user1
+GET {{host}}/articles?author={{user.default.username}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ### Articles Favorited by Username
-GET {{host}}/articles?favorited={{favorited}}
+GET {{host}}/articles?favorited={{article.default.favorited}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ### Articles by Tag
-GET {{host}}/articles?tag={{tag}}
+GET {{host}}/articles?tag={{article.default.tag}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -26,22 +32,64 @@ Authorization: Token {{auth_token}}
 
 {
   "article": {
-    "title": "{{article.title}}",
-    "description": "{{article.description}}",
-    "body": "{{article.body}}",
-    "tagList": {{article.tagList}}
+    "title": "{{article.create.title}}",
+    "description": "{{article.create.description}}",
+    "body": "{{article.create.body}}",
+    "tagList": {{article.create.tagList}}
   }
 }
 
-### Update Article
-PUT {{host}}/articles/{{slug}}
+> {%
+  client.log(response.body);
+  client.log("article : " + response.body.article);
+  client.global.set("article.update.slug", response.body.article.slug);
+%}
+
+### Update Article - Body
+PUT {{host}}/articles/{{article.update.slug}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
 {
   "article": {
-    "body": "With two hands"
+    "body": "{{article.update.body}}"
+  }
+}
+
+> {%
+  client.log(response.body);
+  client.log("article : " + response.body.article);
+  client.global.set("article.update.slug", response.body.article.slug);
+%}
+
+### Update Article - Title
+PUT {{host}}/articles/{{article.update.slug}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "article": {
+    "title": "{{article.update.title}}"
+  }
+}
+
+> {%
+  client.log(response.body);
+  client.log("article : " + response.body.article);
+  client.global.set("article.update.slug", response.body.article.slug);
+%}
+
+### Update Article - Slug Unique Violation
+PUT {{host}}/articles/{{article.update.slug}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+{
+  "article": {
+    "title": "{{article.uniqueViolation.title}}"
   }
 }
 
