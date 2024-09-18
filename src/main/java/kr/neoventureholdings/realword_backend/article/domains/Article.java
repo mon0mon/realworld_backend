@@ -21,6 +21,7 @@ import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
 import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
+import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -60,6 +61,14 @@ public class Article extends BaseEntity {
   private String slug;
   @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
   private Set<Favorite> favorites;
+
+  public void addFavorite(Favorite favorite) {
+    favorites.add(favorite);
+  }
+
+  public void removeFavorite(Favorite favorite) {
+    favorites.remove(favorite);
+  }
 
   public static Article of(ArticleDto dto, User user) {
     assert dto.getSlug() != null;
@@ -108,8 +117,12 @@ public class Article extends BaseEntity {
         .body(getBody())
         .createAt(getCreatedAt())
         .updatedAt(getUpdatedAt())
-        .favorited(null)
-        .favoritesCount(null)
+        .favorited(
+            getFavorites()
+                .stream()
+                .anyMatch(fav -> fav.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
+        )
+        .favoritesCount(getFavorites().size())
         .author(getAuthor().to())
         .tags(List.of())
         .build();
