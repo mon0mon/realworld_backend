@@ -106,4 +106,28 @@ public class ArticleController {
         .contentType(MediaType.APPLICATION_JSON)
         .body(null);
   }
+
+  @PostMapping("/{slug}/favorite")
+  public ResponseEntity<CommonResponseDto> favoriteArticle(
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
+  ) {
+    articleService.favoriteArticle(slug, userDetail);
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(null);
+  }
+
+  @DeleteMapping("/{slug}/favorite")
+  public ResponseEntity<CommonResponseDto> unfavoriteArticle(
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
+  ) {
+    articleService.unfavoriteArticle(slug, userDetail);
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(null);
+  }
 }

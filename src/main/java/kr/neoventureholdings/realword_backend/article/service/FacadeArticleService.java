@@ -38,4 +38,14 @@ public class FacadeArticleService {
   public void deleteArticle(String slug, CustomUserDetail userDetail) {
     articleService.deleteArticle(slug, userDetail);
   }
+
+  @Transactional
+  public void favoriteArticle(String slug, CustomUserDetail userDetail) {
+    articleService.favoriteArticle(slug, userDetail);
+  }
+
+  @Transactional
+  public void unfavoriteArticle(String slug, CustomUserDetail userDetail) {
+    articleService.unfavoriteArticle(slug, userDetail);
+  }
 }
