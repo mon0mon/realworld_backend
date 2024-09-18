@@ -11,11 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.neoventureholdings.realword_backend.TestConstant;
+import kr.neoventureholdings.realword_backend.auth.AuthTestConstant;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import kr.neoventureholdings.realword_backend.constant.TokenConstant;
 import kr.neoventureholdings.realword_backend.util.AuthTestUtils;
-import kr.neoventureholdings.realword_backend.util.TestUserDetailService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +29,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -40,7 +38,7 @@ class AuthControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
-  private final static ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeAll
   static void beforeAll() {
@@ -80,7 +78,7 @@ class AuthControllerTest {
   @Test
   @DisplayName("사용자 인증 컨트롤러 테스트 - 현재 로그인한 사용자 정보")
   @PreAuthorize("isAuthenticated()")
-  @WithUserDetails(value = TestConstant.EMAIL, userDetailsServiceBeanName = "testUserDetailService")
+  @WithUserDetails(value = AuthTestConstant.EMAIL, userDetailsServiceBeanName = "testUserDetailService")
   void getCurrentLoginUserTest() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
@@ -97,8 +95,8 @@ class AuthControllerTest {
           .andExpectAll(
               status().isOk(),
               content().contentType(MediaType.APPLICATION_JSON),
-              jsonPath("$.user.email").value(TestConstant.EMAIL),
-              jsonPath("$.user.username").value(TestConstant.USERNAME),
+              jsonPath("$.user.email").value(AuthTestConstant.EMAIL),
+              jsonPath("$.user.username").value(AuthTestConstant.USERNAME),
               jsonPath("$.user.bio").doesNotExist(),
               jsonPath("$.user.image").doesNotExist()
           );
@@ -110,7 +108,7 @@ class AuthControllerTest {
   @Test
   @DisplayName("사용자 인증 컨트롤러 테스트 - 사용자 정보 수정")
   @PreAuthorize("isAuthenticated()")
-  @WithUserDetails(value = TestConstant.EMAIL, userDetailsServiceBeanName = "testUserDetailService")
+  @WithUserDetails(value = AuthTestConstant.EMAIL, userDetailsServiceBeanName = "testUserDetailService")
   void updateUserInfoTest() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     CustomUserDetail userDetails = (CustomUserDetail) authentication.getPrincipal();
@@ -118,28 +116,18 @@ class AuthControllerTest {
     String token = userDetails.getToken();
     try {
       // 사용자 정보 수정 요청
-      MvcResult updateResult = mockMvc
-          .perform(put("/user")
+      mockMvc.perform(put("/user")
               .header(HttpHeaders.AUTHORIZATION, TokenConstant.TOKEN_HEADER_PREFIX + token)
               .content(objectMapper.writeValueAsString(AuthTestUtils.getUpdateUserRequest()))
               .contentType(MediaType.APPLICATION_JSON_VALUE)
           )
           .andDo(print())
           .andExpect(status().isOk())
-          .andReturn();  // 결과를 반환하여 이후에 사용할 수 있도록
-
-      // 응답 검증
-      mockMvc.perform(get("/user")
-              .header(HttpHeaders.AUTHORIZATION, TokenConstant.TOKEN_HEADER_PREFIX + token)
-              .contentType(MediaType.APPLICATION_JSON_VALUE)
-          )
-          .andDo(print())
-          .andExpect(status().isOk())
           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-          .andExpect(jsonPath("$.user.email").value(TestConstant.UPDATE_EMAIL))
-          .andExpect(jsonPath("$.user.username").value(TestConstant.UPDATE_USERNAME))
-          .andExpect(jsonPath("$.user.bio").value(TestConstant.UPDATE_BIO))
-          .andExpect(jsonPath("$.user.image").value(TestConstant.UPDATE_IMAGE));
+          .andExpect(jsonPath("$.user.email").value(AuthTestConstant.UPDATE_EMAIL))
+          .andExpect(jsonPath("$.user.username").value(AuthTestConstant.UPDATE_USERNAME))
+          .andExpect(jsonPath("$.user.bio").value(AuthTestConstant.UPDATE_BIO))
+          .andExpect(jsonPath("$.user.image").value(AuthTestConstant.UPDATE_IMAGE));
     } catch (Exception e) {
       e.printStackTrace();
     }

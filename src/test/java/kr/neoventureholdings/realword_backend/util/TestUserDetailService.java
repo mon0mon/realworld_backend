@@ -1,6 +1,6 @@
 package kr.neoventureholdings.realword_backend.util;
 
-import kr.neoventureholdings.realword_backend.TestConstant;
+import kr.neoventureholdings.realword_backend.auth.AuthTestConstant;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;
@@ -27,7 +27,7 @@ public class TestUserDetailService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     if (!StringUtils.hasText(email)) {
-      email = TestConstant.EMAIL;
+      email = AuthTestConstant.EMAIL;
     }
 
     User user = userRepository.findByEmail(email).get();
