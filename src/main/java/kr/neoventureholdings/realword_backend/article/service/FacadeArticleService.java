@@ -31,7 +31,7 @@ public class FacadeArticleService {
     return articleService.updateArticle(articleRequestDto, slug, userDetail);
   }
 
-  public boolean deleteArticle(String slug, CustomUserDetail userDetail) {
-    return articleService.deleteArticle(slug, userDetail);
+  public void deleteArticle(String slug, CustomUserDetail userDetail) {
+    articleService.deleteArticle(slug, userDetail);
   }
 }
