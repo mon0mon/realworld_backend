@@ -3,7 +3,7 @@ package kr.neoventureholdings.realword_backend.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.neoventureholdings.realword_backend.TestConstant;
+import kr.neoventureholdings.realword_backend.auth.AuthTestConstant;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
 
@@ -12,11 +12,11 @@ public class AuthTestUtils {
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   public static CommonRequestDto getLoginDefaultUserRequest() {
-    return getLoginUserRequest(TestConstant.EMAIL, TestConstant.PASSWORD);
+    return getLoginUserRequest(AuthTestConstant.EMAIL, AuthTestConstant.PASSWORD);
   }
 
   public static CommonRequestDto getLoginUpdatedUserRequest() {
-    return getLoginUserRequest(TestConstant.UPDATE_EMAIL, TestConstant.UPDATE_PASSWORD);
+    return getLoginUserRequest(AuthTestConstant.UPDATE_EMAIL, AuthTestConstant.UPDATE_PASSWORD);
   }
 
   public static CommonRequestDto getLoginUserRequest(String email, String password) {
@@ -24,8 +24,8 @@ public class AuthTestUtils {
   }
 
   public static CommonRequestDto getRegisterUserRequest() {
-    return getRegisterUserRequest(TestConstant.REGISTER_EMAIL, TestConstant.REGISTER_USERNAME,
-        TestConstant.REGISTER_PASSWORD);
+    return getRegisterUserRequest(AuthTestConstant.REGISTER_EMAIL, AuthTestConstant.REGISTER_USERNAME,
+        AuthTestConstant.REGISTER_PASSWORD);
   }
 
   public static CommonRequestDto getRegisterUserRequest(String email, String username,
@@ -34,8 +34,8 @@ public class AuthTestUtils {
   }
 
   public static CommonRequestDto getUpdateUserRequest() {
-    return getCommonRequestDto(TestConstant.UPDATE_EMAIL, TestConstant.UPDATE_USERNAME, TestConstant.UPDATE_PASSWORD,
-        TestConstant.UPDATE_BIO, TestConstant.UPDATE_IMAGE);
+    return getCommonRequestDto(AuthTestConstant.UPDATE_EMAIL, AuthTestConstant.UPDATE_USERNAME, AuthTestConstant.UPDATE_PASSWORD,
+        AuthTestConstant.UPDATE_BIO, AuthTestConstant.UPDATE_IMAGE);
   }
 
   public static CommonRequestDto getUpdateUserRequest(String email, String username,
