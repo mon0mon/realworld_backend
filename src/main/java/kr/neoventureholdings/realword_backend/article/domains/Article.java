@@ -1,5 +1,6 @@
 package kr.neoventureholdings.realword_backend.article.domains;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -59,7 +60,7 @@ public class Article extends BaseEntity {
   private String body;
   @Column(unique = true)
   private String slug;
-  @OneToMany(mappedBy = "article", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   private Set<Favorite> favorites;
 
   public void addFavorite(Favorite favorite) {
