@@ -1,0 +1,11 @@
+### Favorite Article
+POST {{host}}/articles/{{slug}}//favorite
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
+
+### Unfavorite Article
+DELETE {{host}}/articles/{{slug}}/favorite
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+Authorization: Token {{auth_token}}
