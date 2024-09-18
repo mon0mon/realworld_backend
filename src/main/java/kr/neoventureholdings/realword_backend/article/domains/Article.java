@@ -56,6 +56,8 @@ public class Article extends BaseEntity {
   private String slug;
 
   public static Article of(ArticleDto dto, User user) {
+    assert dto.getSlug() != null;
+
     return Article
         .builder()
         .title(dto.getTitle())
@@ -67,22 +69,28 @@ public class Article extends BaseEntity {
         .build();
   }
 
-  public Article of(ArticleDto dto, boolean updateSlug) {
-    return Article
-        .builder()
-        .title(StringUtils.hasText(dto.getTitle()) ?
-            dto.getTitle() : getTitle()
-        )
-        .body(StringUtils.hasText(dto.getBody()) ?
-            dto.getBody() : getBody()
-        )
-        .description(StringUtils.hasText(dto.getDescription()) ?
-            dto.getDescription() : getDescription()
-        )
-        .slug((StringUtils.hasText(dto.getSlug()) && updateSlug) ?
-            dto.getSlug() : getSlug()
-        )
-        .build();
+  public Article of(ArticleDto dto) {
+    if (dto.getAuthor() != null) {
+      setAuthor(dto.getAuthor());
+    }
+
+    if (StringUtils.hasText(dto.getTitle())) {
+      setTitle(dto.getTitle());
+    }
+
+    if (StringUtils.hasText(dto.getBody())) {
+      setBody(dto.getBody());
+    }
+
+    if (StringUtils.hasText(dto.getDescription())) {
+      setDescription(dto.getDescription());
+    }
+
+    if (StringUtils.hasText(dto.getSlug())) {
+      setSlug(dto.getSlug());
+    }
+
+    return this;
   }
 
   public ArticleResponseDto to() {
