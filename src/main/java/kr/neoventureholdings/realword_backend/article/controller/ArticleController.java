@@ -1,6 +1,6 @@
 package kr.neoventureholdings.realword_backend.article.controller;
 
-import kr.neoventureholdings.realword_backend.article.domains.Article;
+import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestParamDto;
 import kr.neoventureholdings.realword_backend.article.service.FacadeArticleService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
@@ -31,22 +31,25 @@ public class ArticleController {
 
   @GetMapping
   public ResponseEntity<CommonResponseDto> getArticle(
-      @ModelAttribute ArticleRequestParamDto paramDto) {
+      @ModelAttribute ArticleRequestParamDto paramDto,
+      @AuthenticationPrincipal CustomUserDetail userDetail
+  ) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
-            .articleResponseDtoList(articleService.getArticles(paramDto)
-                .stream()
-                .map(Article::to)
-                .toList()
+            .articleResponseDtoList(
+                ArticleListResponseDto.of(articleService.getArticles(paramDto))
             )
             .build()
         );
   }
 
   @GetMapping("/{slug}")
-  public ResponseEntity<CommonResponseDto> getArticles(@PathVariable("slug") String slug) {
+  public ResponseEntity<CommonResponseDto> getArticles(
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
+  ) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
