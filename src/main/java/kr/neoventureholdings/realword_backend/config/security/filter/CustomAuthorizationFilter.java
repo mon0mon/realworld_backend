@@ -52,6 +52,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
       new AntPathRequestMatcher("/articles/*", HttpMethod.GET.name())
   );
 
+  private final List<RequestMatcher> authRequiredUrlMatchers = List.of(
+      new AntPathRequestMatcher("/articles/feed", HttpMethod.GET.name())
+  );
+
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     return excludeUrlMatchers
@@ -78,8 +82,16 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             -> matcher.matches(request)
         );
 
+    //  wildcard로 지정된 URL에 경우 하위 URL에 대해서 인증처리를 요구할 때 지정
+    //  true : wildcard로 지정된 authOptionalUrlMatchers 중에 현재 URL이 인증처리를 요구
+    //  ex) /articles/* /articles/feed
+    //  false : 현재 URL은 wildcard에 해당하지 않음
+    boolean isWildcardUrlThatRequireAuth = authRequiredUrlMatchers
+        .stream()
+        .anyMatch(matcher -> matcher.matches(request));
+
     if (!StringUtils.hasText(token) || !jwtTokenProvider.validateToken(token)) {
-      if (isAuthOptional) {
+      if (isAuthOptional && !isWildcardUrlThatRequireAuth) {
         log.debug("[Security] : 인증정보 Optional ({})", request.getRequestURI());
         CustomUserDetail anonymousUserDetail = new CustomUserDetail();
         anonymousUserDetail.setAnonymous(true);
