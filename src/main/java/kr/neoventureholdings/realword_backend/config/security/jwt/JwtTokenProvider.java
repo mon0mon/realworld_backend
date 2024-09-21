@@ -2,12 +2,12 @@ package kr.neoventureholdings.realword_backend.config.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
+import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.http.Cookie;
 import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import lombok.Builder;
@@ -96,24 +96,26 @@ public class JwtTokenProvider {
     return JwtTokenProvider.REFRESH_TOKEN.equals(cookie.getName());
   }
 
-  public boolean validateToken(String token) {
+  public JwtTokenValidationState validateToken(String token) {
     try {
       JWT.require(jwtConfig.getEncodedSecretKey()).build().verify(token);
-      return true;
-    } catch (SignatureException e) { // 유효하지 않은 JWT 서명
-      log.info("Not Valid JWT Signature");
-    } catch (MalformedJwtException e) { // 유효하지 않은 JWT
-      log.info("Not Valid JWT");
-    } catch (ExpiredJwtException e) { // 만료된 JWT
+      return JwtTokenValidationState.SUCCESS;
+    } catch (AlgorithmMismatchException e) {
+      log.info("JWT Algorithm Mismatch");
+      return JwtTokenValidationState.TOKEN_ALGORITHM_MISMATCH;
+    } catch (SignatureException e) {
+      log.info("JWT Signature Not valid");
+      return JwtTokenValidationState.TOKEN_SIGNATURE_NOT_VALID;
+    } catch (TokenExpiredException e) { // 만료된 JWT
       log.info("Expired JWT");
-    } catch (UnsupportedJwtException e) { // 지원하지 않는 JWT
-      log.info("Unsupported JWT");
-    } catch (IllegalArgumentException e) { // 빈값
-      log.info("Empty JWT");
+      return JwtTokenValidationState.TOKEN_EXPIRED;
+    } catch (InvalidClaimException e) { // 지원하지 않는 JWT
+      log.info("Invalid JWT Claim");
+      return JwtTokenValidationState.TOKEN_NOT_SUPPORTED;
     } catch (JWTVerificationException e) {
       log.info("JWT 인증 오류");
+      return JwtTokenValidationState.TOKEN_VERIFICATION_ERROR;
     }
-    return false;
   }
 
   @Getter
