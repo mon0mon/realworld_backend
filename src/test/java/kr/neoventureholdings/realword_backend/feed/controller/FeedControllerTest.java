@@ -35,18 +35,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class FeedControllerTest {
+class FeedControllerTest {
   @Autowired
   private MockMvc mockMvc;
-  private static final ObjectMapper objectMapper = new ObjectMapper();
-
-  @BeforeAll
-  static void beforeAll() {
-    objectMapper.setSerializationInclusion(Include.NON_NULL);
-  }
 
   @Test
-  @DisplayName("게시글 컨트롤러 테스트 - 목록 조회 (로그인 X)(Filter : Author)(Author : celeb)")
+  @DisplayName("게시글 컨트롤러 테스트 - 피드 게시글 조회")
   @PreAuthorize("isAuthenticated()")
   @WithUserDetails(value = AuthTestConstant.EMAIL, userDetailsServiceBeanName = "testUserDetailService")
   void getArticleListByAuthor() {
