@@ -46,7 +46,6 @@ public class ArticleService {
     return getArticleBySlug(slug);
   }
 
-  //  TODO 필터링 옵션을 어떻게 적용할 것인지 고민해보고 구현하기
   public Page<Article> getArticles(ArticleRequestParamDto paramDto) {
     Pageable pageable = PageRequest.of(paramDto.getOffset(), paramDto.getLimit(),
         Sort.by(Direction.DESC, "id"));

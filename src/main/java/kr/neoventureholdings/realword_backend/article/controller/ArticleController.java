@@ -32,7 +32,7 @@ public class ArticleController {
 
   @GetMapping
   public ResponseEntity<CommonResponseDto> getArticle(
-      @ModelAttribute ArticleRequestParamDto paramDto,
+      @Validated @ModelAttribute ArticleRequestParamDto paramDto,
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
     return ResponseEntity
