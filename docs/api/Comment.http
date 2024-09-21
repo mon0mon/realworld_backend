@@ -1,5 +1,5 @@
 ### Create Comment for Article
-POST {{host}}/articles/{{slug}}/comments
+POST {{host}}/articles/{{comment.slug}}/comments
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
@@ -11,18 +11,18 @@ Authorization: Token {{auth_token}}
 }
 
 ### All Comments for Article
-GET {{host}}/articles/{{slug}}/comments
+GET {{host}}/articles/{{comment.slug}}/comments
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
 
 ### All Comment for Article without login
-GET {{host}}/articles/{{slug}}/comments
+GET {{host}}/articles/{{comment.slug}}/comments
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ### Delete Comment for Article
-DELETE {{host}}/articles/{{slug}}/comments/{{commentId}}
+DELETE {{host}}/articles/{{comment.slug}}/comments/{{comment.commentId}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 Authorization: Token {{auth_token}}
