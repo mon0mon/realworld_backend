@@ -20,4 +20,8 @@ public class FacadeTagService {
   public Tag findTag(String tagValue) {
     return tagService.findByTagValue(tagValue);
   }
+
+  public List<Tag> getTags() {
+    return tagService.getTags();
+  }
 }
