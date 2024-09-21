@@ -10,8 +10,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tags")
-public class Tags {
+@Table(name = "tag_map")
+public class TagMap {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -24,7 +24,7 @@ public class Tags {
   @JoinColumn(name = "tag_id")
   private Tag tag;
 
-  public Tags(Article article, Tag tag) {
+  public TagMap(Article article, Tag tag) {
     this.article = article;
     this.tag = tag;
   }
