@@ -29,6 +29,16 @@ GET {{host}}/articles?tag={{article.filter.tag}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
+### Articles by Limit and offset
+GET {{host}}/articles?offset={{article.filter.offset}}&limit={{article.filter.limit}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Limit and offset out of range
+GET {{host}}/articles?offset={{article.filter.outOfRange.offset}}&limit={{article.filter.outOfRange.limit}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
 ### Create Articles
 POST {{host}}/articles
 Content-Type: application/json
