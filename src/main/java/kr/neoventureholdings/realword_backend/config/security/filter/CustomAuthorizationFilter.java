@@ -5,12 +5,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.neoventureholdings.realword_backend.common.dto.ErrorResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetailsService;
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider.JWTInfo;
+import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenValidationState;
 import kr.neoventureholdings.realword_backend.constant.TokenConstant;
 import kr.neoventureholdings.realword_backend.exception.ErrorResponse;
+import kr.neoventureholdings.realword_backend.util.ErrorResponseHandler;
+import kr.neoventureholdings.realword_backend.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -50,7 +54,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   private final List<RequestMatcher> authOptionalUrlMatchers = List.of(
       new AntPathRequestMatcher("/profiles/*", HttpMethod.GET.name()),
       new AntPathRequestMatcher("/articles", HttpMethod.GET.name()),
-      new AntPathRequestMatcher("/articles/*", HttpMethod.GET.name())
+      new AntPathRequestMatcher("/articles/*", HttpMethod.GET.name()),
+      new AntPathRequestMatcher("/articles/*/comments", HttpMethod.GET.name())
   );
 
   private final List<RequestMatcher> authRequiredUrlMatchers = List.of(
@@ -74,7 +79,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     if (authorizationHeader != null && authorizationHeader.startsWith(
         TokenConstant.TOKEN_HEADER_PREFIX)) {
-      token = getToken(authorizationHeader);
+      token = StringUtil.getToken(authorizationHeader);
     }
 
     boolean isAuthOptional = authOptionalUrlMatchers
@@ -91,13 +96,14 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
         .stream()
         .anyMatch(matcher -> matcher.matches(request));
 
-    if (!StringUtils.hasText(token) || !jwtTokenProvider.validateToken(token)) {
+    if (!StringUtils.hasText(token)) {
       if (isAuthOptional && !isWildcardUrlThatRequireAuth) {
         log.debug("[Security] : 인증정보 Optional ({})", request.getRequestURI());
         CustomUserDetail anonymousUserDetail = new CustomUserDetail();
         anonymousUserDetail.setAnonymous(true);
         AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
-            "anonymousUser", anonymousUserDetail, Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS")));
+            "anonymousUser", anonymousUserDetail,
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS")));
         SecurityContextHolder.getContext().setAuthentication(anonymousToken);
         filterChain.doFilter(request, response);
         return;
@@ -105,12 +111,26 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
       log.info("[Security] : 유효한 JWT토큰이 없습니다.");
 
-      ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED,
-          List.of("request requires authentication"));
-      response.setStatus(errorResponse.getStatus().value());
-      response.setContentType(APPLICATION_JSON_VALUE);
-      objectMapper.writeValue(response.getOutputStream(), errorResponse);
+      ErrorResponseHandler.handleErrorResponse(response, ErrorResponseDto.builder()
+          .status(HttpStatus.UNAUTHORIZED)
+          .body(List.of("request requires authentication"))
+          .build()
+      );
       return;
+    }
+
+    //  주어진 토큰 유효성 검증
+    JwtTokenValidationState tokenValidationState = jwtTokenProvider.validateToken(token);
+    switch (tokenValidationState) {
+      case SUCCESS -> log.debug("token validation success");
+      default -> {
+        log.debug("token validation failed");
+        ErrorResponseHandler.handleErrorResponse(response, ErrorResponseDto.builder()
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(List.of(tokenValidationState.getValue()))
+            .build());
+        return;
+      }
     }
 
     JWTInfo jwtInfo = jwtTokenProvider.decodeToken(token);
@@ -129,9 +149,5 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     }
 
     filterChain.doFilter(request, response);
-  }
-
-  private String getToken(String tokenHeader) {
-    return tokenHeader.substring(TokenConstant.TOKEN_HEADER_PREFIX.length());
   }
 }
