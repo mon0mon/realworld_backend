@@ -128,3 +128,12 @@ select a.id, t.id
 from article a
          join tag t on t.tag_value = 'Javascript'
 where a.slug in ('javascript', 'node-js', 'next-js');
+
+-- 게시글 Favorite
+insert into favorite (article_id, user_id)
+select a.id, u.id
+from article a
+         join tag_map tm on a.id = tm.article_id
+         join tag t on tm.tag_id = t.id
+         join users u on u.email = 'celeb@example.com'
+where t.tag_value = 'Java';
