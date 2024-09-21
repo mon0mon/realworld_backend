@@ -30,8 +30,22 @@ public class ArticleController {
 
   private final FacadeArticleService articleService;
 
-  @GetMapping
+  @GetMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> getArticle(
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
+  ) {
+    return ResponseEntity
+        .ok()
+        .body(CommonResponseDto
+            .builder()
+            .articleResponseDto(articleService.getArticle(slug).to())
+            .build()
+        );
+  }
+
+  @GetMapping
+  public ResponseEntity<CommonResponseDto> getArticles(
       @Validated @ModelAttribute ArticleRequestParamDto paramDto,
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
@@ -42,20 +56,6 @@ public class ArticleController {
             .articleResponseDtoList(
                 ArticleListResponseDto.of(articleService.getArticles(paramDto))
             )
-            .build()
-        );
-  }
-
-  @GetMapping("/{slug}")
-  public ResponseEntity<CommonResponseDto> getArticles(
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
-  ) {
-    return ResponseEntity
-        .ok()
-        .body(CommonResponseDto
-            .builder()
-            .articleResponseDto(articleService.getArticle(slug).to())
             .build()
         );
   }
