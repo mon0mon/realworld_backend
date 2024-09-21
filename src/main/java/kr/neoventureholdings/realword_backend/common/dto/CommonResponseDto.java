@@ -8,6 +8,7 @@ import java.util.List;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
+import kr.neoventureholdings.realword_backend.comment.dto.CommentResponseDto;
 import kr.neoventureholdings.realword_backend.profile.dto.ProfileResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +33,8 @@ public class CommonResponseDto {
   private ArticleListResponseDto articleResponseDtoList;
   @JsonProperty("tags")
   private List<String> tags;
+  @JsonProperty("comment")
+  private CommentResponseDto commentResponseDto;
+  @JsonProperty("comments")
+  private List<CommentResponseDto> commentResponseDtoList;
 }
