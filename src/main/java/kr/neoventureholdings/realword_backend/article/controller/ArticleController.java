@@ -1,6 +1,7 @@
 package kr.neoventureholdings.realword_backend.article.controller;
 
 import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto;
+import kr.neoventureholdings.realword_backend.article.dto.ArticleParamType;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestParamDto;
 import kr.neoventureholdings.realword_backend.article.service.FacadeArticleService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
@@ -32,8 +33,7 @@ public class ArticleController {
 
   @GetMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> getArticle(
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @PathVariable("slug") String slug
   ) {
     return ResponseEntity
         .ok()
@@ -46,9 +46,24 @@ public class ArticleController {
 
   @GetMapping
   public ResponseEntity<CommonResponseDto> getArticles(
-      @Validated @ModelAttribute ArticleRequestParamDto paramDto,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @Validated @ModelAttribute ArticleRequestParamDto paramDto
   ) {
+    return ResponseEntity
+        .ok()
+        .body(CommonResponseDto
+            .builder()
+            .articleResponseDtoList(
+                ArticleListResponseDto.of(articleService.getArticles(paramDto))
+            )
+            .build()
+        );
+  }
+
+  @GetMapping("/feed")
+  public ResponseEntity<CommonResponseDto> getFeeds(
+      @Validated @ModelAttribute ArticleRequestParamDto paramDto
+  ) {
+    paramDto.setParamType(ArticleParamType.FEED);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
