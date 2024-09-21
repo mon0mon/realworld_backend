@@ -33,7 +33,7 @@ public class Profile {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotNull
-  @OneToOne(fetch = FetchType.EAGER)
+  @OneToOne(fetch = FetchType.LAZY)
   private User user;
   @NotBlank
   @Column(name = "username", unique = true)
