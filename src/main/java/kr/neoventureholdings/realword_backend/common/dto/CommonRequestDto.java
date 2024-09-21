@@ -3,6 +3,7 @@ package kr.neoventureholdings.realword_backend.common.dto;
 import jakarta.validation.Valid;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
+import kr.neoventureholdings.realword_backend.comment.dto.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,6 @@ public class CommonRequestDto {
   private UserRequestDto user;
   @Valid
   private ArticleRequestDto article;
+  @Valid
+  private CommentRequestDto comment;
 }
