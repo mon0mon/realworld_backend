@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.util.List;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
@@ -29,4 +30,6 @@ public class CommonResponseDto {
   private ArticleResponseDto articleResponseDto;
   @JsonUnwrapped
   private ArticleListResponseDto articleResponseDtoList;
+  @JsonProperty("tags")
+  private List<String> tags;
 }

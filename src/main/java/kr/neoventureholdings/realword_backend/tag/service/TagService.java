@@ -43,4 +43,8 @@ public class TagService {
     return tagRepository.findByValue(tagValue)
         .orElseThrow(() -> new NoSuchElementException("no such tag"));
   }
+
+  public List<Tag> getTags() {
+    return tagRepository.findAll();
+  }
 }

@@ -43,7 +43,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
   private final List<RequestMatcher> excludeUrlMatchers = List.of(
       new AntPathRequestMatcher("/h2-console/**"),
-      new AntPathRequestMatcher("/users/**")
+      new AntPathRequestMatcher("/users/**"),
+      new AntPathRequestMatcher("/tags")
   );
 
   private final List<RequestMatcher> authOptionalUrlMatchers = List.of(
