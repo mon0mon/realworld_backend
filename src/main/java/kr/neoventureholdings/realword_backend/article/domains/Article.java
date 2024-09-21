@@ -9,11 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -22,6 +24,7 @@ import kr.neoventureholdings.realword_backend.article.dto.ArticleResponseDto;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.common.entity.BaseEntity;
 import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
+import kr.neoventureholdings.realword_backend.tag.domains.Tag;
 import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,12 +44,12 @@ import org.springframework.util.StringUtils;
     @Index(name = "idx_slug", columnList = "slug"),
     @Index(name = "idx_author", columnList = "author_id")
 })
-@NamedEntityGraph(name= "Article.withUser", attributeNodes = @NamedAttributeNode("author"))
 @NamedEntityGraph(name = "Article.withUserAndFavorites", attributeNodes = {
     @NamedAttributeNode("author"),
     @NamedAttributeNode("favorites")
 })
 public class Article extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -60,8 +63,17 @@ public class Article extends BaseEntity {
   private String body;
   @Column(unique = true)
   private String slug;
-  @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  private Set<Favorite> favorites;
+  @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private Set<Favorite> favorites = new HashSet<>();
+  @JoinTable(
+      name = "tag_map",
+      joinColumns = @JoinColumn(name = "article_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id")
+  )
+  @OneToMany(fetch = FetchType.EAGER)
+  @Builder.Default
+  private Set<Tag> tags = new HashSet<>();
 
   public void addFavorite(Favorite favorite) {
     favorites.add(favorite);
