@@ -155,8 +155,12 @@ public class ArticleController {
   ) {
     return ResponseEntity
         .ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .build();
+        .body(CommonResponseDto.builder()
+            .commentResponseDtoList(
+                facadeCommentService.getComments(slug).stream().map(CommentResponseDto::of)
+                    .toList())
+            .build()
+        );
   }
 
   @PostMapping("/{slug}/comments")
