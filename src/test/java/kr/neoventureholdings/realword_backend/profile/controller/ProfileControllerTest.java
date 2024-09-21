@@ -76,7 +76,7 @@ class ProfileControllerTest {
               jsonPath("$.profile.username").value(ProfileTestConstant.PROFILE_USERNAME),
               jsonPath("$.profile.bio").value(ProfileTestConstant.PROFILE_BIO),
               jsonPath("$.profile.image").value(ProfileTestConstant.PROFILE_IMAGE),
-              jsonPath("$.profile.following").value(false)
+              jsonPath("$.profile.following").value(true)
           );
     } catch (Exception e) {
       throw new RuntimeException(e);
