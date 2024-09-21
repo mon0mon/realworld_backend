@@ -137,3 +137,8 @@ from article a
          join tag t on tm.tag_id = t.id
          join users u on u.email = 'celeb@example.com'
 where t.tag_value = 'Java';
+
+-- Follow
+insert into follow (followee_user_id, follower_user_id)
+values ((select id from users where email like 'celeb@example.com'),
+        (select id from users where email like 'user1@example.com'));
