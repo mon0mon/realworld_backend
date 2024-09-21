@@ -4,6 +4,8 @@ import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto
 import kr.neoventureholdings.realword_backend.article.dto.ArticleParamType;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestParamDto;
 import kr.neoventureholdings.realword_backend.article.service.FacadeArticleService;
+import kr.neoventureholdings.realword_backend.comment.dto.CommentResponseDto;
+import kr.neoventureholdings.realword_backend.comment.service.FacadeCommentService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
 import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
@@ -29,7 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/articles")
 public class ArticleController {
 
-  private final FacadeArticleService articleService;
+  private final FacadeArticleService facadeArticleService;
+  private final FacadeCommentService facadeCommentService;
 
   @GetMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> getArticle(
@@ -39,7 +42,7 @@ public class ArticleController {
         .ok()
         .body(CommonResponseDto
             .builder()
-            .articleResponseDto(articleService.getArticle(slug).to())
+            .articleResponseDto(facadeArticleService.getArticle(slug).to())
             .build()
         );
   }
@@ -53,7 +56,7 @@ public class ArticleController {
         .body(CommonResponseDto
             .builder()
             .articleResponseDtoList(
-                ArticleListResponseDto.of(articleService.getArticles(paramDto))
+                ArticleListResponseDto.of(facadeArticleService.getArticles(paramDto))
             )
             .build()
         );
@@ -69,7 +72,7 @@ public class ArticleController {
         .body(CommonResponseDto
             .builder()
             .articleResponseDtoList(
-                ArticleListResponseDto.of(articleService.getArticles(paramDto))
+                ArticleListResponseDto.of(facadeArticleService.getArticles(paramDto))
             )
             .build()
         );
@@ -85,7 +88,7 @@ public class ArticleController {
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
-                articleService.saveArticle(commonRequestDto.getArticle(), userDetail)
+                facadeArticleService.saveArticle(commonRequestDto.getArticle(), userDetail)
                     .to()
             )
             .build()
@@ -103,7 +106,7 @@ public class ArticleController {
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
-                articleService.updateArticle(commonRequestDto.getArticle(), slug, userDetail)
+                facadeArticleService.updateArticle(commonRequestDto.getArticle(), slug, userDetail)
                     .to()
             )
             .build()
@@ -115,7 +118,7 @@ public class ArticleController {
       @PathVariable("slug") String slug,
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
-    articleService.deleteArticle(slug, userDetail);
+    facadeArticleService.deleteArticle(slug, userDetail);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
@@ -127,7 +130,7 @@ public class ArticleController {
       @PathVariable("slug") String slug,
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
-    articleService.favoriteArticle(slug, userDetail);
+    facadeArticleService.favoriteArticle(slug, userDetail);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
@@ -139,10 +142,47 @@ public class ArticleController {
       @PathVariable("slug") String slug,
       @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
-    articleService.unfavoriteArticle(slug, userDetail);
+    facadeArticleService.unfavoriteArticle(slug, userDetail);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
         .body(null);
+  }
+
+  @GetMapping("/{slug}/comments")
+  public ResponseEntity<CommonResponseDto> getComments(
+      @PathVariable("slug") String slug
+  ) {
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .build();
+  }
+
+  @PostMapping("/{slug}/comments")
+  public ResponseEntity<CommonResponseDto> createComment(
+      @PathVariable("slug") String slug,
+      @Validated @RequestBody CommonRequestDto requestDto
+  ) {
+    return ResponseEntity
+        .ok()
+        .body(CommonResponseDto.builder()
+            .commentResponseDto(
+                CommentResponseDto.of(
+                    facadeCommentService.createComment(slug, requestDto.getComment())))
+            .build()
+        );
+  }
+
+  @DeleteMapping("/{slug}/comments/{id}")
+  public ResponseEntity<CommonResponseDto> deleteComment(
+      @PathVariable("slug") String slug,
+      @PathVariable("id") Long commentId
+  ) {
+    facadeCommentService.deleteComment(slug, commentId);
+    return ResponseEntity
+        .ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .build();
   }
 }
