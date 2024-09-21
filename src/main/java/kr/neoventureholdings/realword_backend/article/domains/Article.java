@@ -16,7 +16,6 @@ import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleDto;
@@ -66,13 +65,12 @@ public class Article extends BaseEntity {
   @OneToMany(mappedBy = "article", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
   @Builder.Default
   private Set<Favorite> favorites = new HashSet<>();
+  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
   @JoinTable(
       name = "tag_map",
       joinColumns = @JoinColumn(name = "article_id"),
       inverseJoinColumns = @JoinColumn(name = "tag_id")
   )
-  @OneToMany(fetch = FetchType.EAGER)
-  @Builder.Default
   private Set<Tag> tags = new HashSet<>();
 
   public void addFavorite(Favorite favorite) {
@@ -81,6 +79,14 @@ public class Article extends BaseEntity {
 
   public void removeFavorite(Favorite favorite) {
     favorites.remove(favorite);
+  }
+
+  public void addTag(Tag tag) {
+    getTags().add(tag);
+  }
+
+  public void removeTag(Tag tag) {
+    getTags().remove(tag);
   }
 
   public static Article of(ArticleDto dto, User user) {
@@ -137,7 +143,10 @@ public class Article extends BaseEntity {
         )
         .favoritesCount(getFavorites().size())
         .author(getAuthor().to())
-        .tags(List.of())
+        .tags(getTags()
+            .stream()
+            .map(Tag::getValue)
+            .toList())
         .build();
   }
 
