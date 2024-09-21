@@ -24,6 +24,7 @@ import kr.neoventureholdings.realword_backend.tag.service.FacadeTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,10 +48,18 @@ public class ArticleService {
   }
 
   public Page<Article> getArticles(ArticleRequestParamDto paramDto) {
-    Pageable pageable = PageRequest.of(paramDto.getOffset(), paramDto.getLimit(),
-        Sort.by(Direction.DESC, "id"));
+    Sort sort = Sort.by(Direction.DESC, "id");
+    Pageable pageable = PageRequest.of(paramDto.getOffset(), paramDto.getLimit(), sort);
     Specification<Article> specification = ArticleSpecification.getArticlesByFilters(paramDto);
-    return articleRepository.findAll(specification, pageable);
+    Page<Article> articlesPage = articleRepository.findAll(specification, pageable);
+    List<Article> articleList = articleRepository.findAllByIdIn(
+        articlesPage.getContent()
+            .stream()
+            .map(Article::getId)
+            .toList(),
+        sort
+    );
+    return new PageImpl<>(articleList, pageable, articlesPage.getTotalElements());
   }
 
   @Transactional
@@ -149,16 +158,10 @@ public class ArticleService {
         .orElseThrow(() -> new NoSuchElementException("no article found"));
   }
 
-  private Article getArticleByAuthorAndSlug(User author, String slug) {
-    return articleRepository.findArticleByAuthorAndSlug(author, slug)
-        .orElseThrow(() -> new NoSuchElementException("no article found"));
-  }
-
   private Article extractRequestDtoToEntity(ArticleRequestDto articleRequestDto, User user) {
     ArticleDto articleDto = ArticleDto.of(articleRequestDto);
-    Article article = Article.of(articleDto, user);
 
-    return article;
+    return Article.of(articleDto, user);
   }
 
   private void checkSlugIsUnique(String oldSlug, String newSlug) {

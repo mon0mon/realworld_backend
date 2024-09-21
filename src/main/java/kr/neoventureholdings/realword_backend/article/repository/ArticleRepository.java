@@ -1,10 +1,13 @@
 package kr.neoventureholdings.realword_backend.article.repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,9 +24,14 @@ public interface ArticleRepository extends JpaRepository<Article, Long>,
 
   public Optional<Article> findArticleBySlug(String slug);
 
+  public Page<Article> findAll(Specification<Article> spec, Pageable pageable);
+
   @EntityGraph(value = "Article.withUserAndFavoritesAndTags")
   public Optional<Article> findArticleByAuthorAndSlug(User author, String slug);
 
   @EntityGraph(value = "Article.withUserAndFavoritesAndTags")
-  public Page<Article> findAll(Specification<Article> spec, Pageable pageable);
+  public List<Article> findAllByIdIn(Collection<Long> idList);
+
+  @EntityGraph(value = "Article.withUserAndFavoritesAndTags")
+  public List<Article> findAllByIdIn(Collection<Long> idList, Sort sort);
 }
