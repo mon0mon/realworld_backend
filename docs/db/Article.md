@@ -12,10 +12,7 @@
 
 > 빠른 개발 속도 및 기본 제공 요소로 인해 사용
 
-### 2. Article - Favorite FetchType
-| Article과 Favorite 연관관계에서 FetchType.Eager를 사용한 이유
+### 2. Article - Favorite, Article -Tag N+1
 
-- 인증이 된 상태에서 게시글 조회를 할 경우, 해당 게시글에 좋아요 여부를 확인해야함
-- 매 게시글 마다 체크하기 때문에, FetchType.Lazy 보다 @EntityGraph와 FetchType.Eager를 사용하는 것이 성능상 좋을 것이라고 판단
-
-> 필수적으로 좋아요 여부를 확인하기 때문에, 초기에 값을 불러오는 Eager와 @EntityGraph 사용
+- 기본적으로 N:1 또는 N:M인 관계에서 N+1 문제 발생
+- Article 엔티티를 조회간에 @EntityGraph를 이용해서 조인해서 데이터를 조회하도록 수정

@@ -15,18 +15,15 @@ import org.springframework.stereotype.Repository;
 public interface ArticleRepository extends JpaRepository<Article, Long>,
     JpaSpecificationExecutor<Article> {
 
-  @EntityGraph(value = "Article.withUserAndFavorites")
   public Optional<Article> findById(Long id);
 
-  @EntityGraph(value = "Article.withUserAndFavorites")
   public Optional<Article> findArticlesByAuthor(User author);
 
-  @EntityGraph(value = "Article.withUserAndFavorites")
   public Optional<Article> findArticleBySlug(String slug);
 
-  @EntityGraph(value = "Article.withUserAndFavorites")
+  @EntityGraph(value = "Article.withUserAndFavoritesAndTags")
   public Optional<Article> findArticleByAuthorAndSlug(User author, String slug);
 
-  @EntityGraph(value = "Article.withUserAndFavorites")
+  @EntityGraph(value = "Article.withUserAndFavoritesAndTags")
   public Page<Article> findAll(Specification<Article> spec, Pageable pageable);
 }

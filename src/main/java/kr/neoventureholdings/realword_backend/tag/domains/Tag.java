@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,11 +38,12 @@ public class Tag {
   private String value;
 
   //  현재 태그가 포함되어있는 게시글 조회
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
+  @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "tag_map",
       joinColumns = @JoinColumn(name = "tag_id"),
       inverseJoinColumns = @JoinColumn(name = "article_id")
   )
+  @Builder.Default
   private Set<Article> articles = new HashSet<>();
 }
