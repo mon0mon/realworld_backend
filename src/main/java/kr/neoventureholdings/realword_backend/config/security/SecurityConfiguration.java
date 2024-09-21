@@ -47,6 +47,7 @@ public class SecurityConfiguration {
             .requestMatchers("/profiles/*").permitAll()
             .requestMatchers("/articles").permitAll()
             .requestMatchers("/articles/*").permitAll()
+            .requestMatchers("/tags").permitAll()
             .anyRequest().authenticated());
 
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
