@@ -1,5 +1,10 @@
 package kr.neoventureholdings.realword_backend.util;
 
+import kr.neoventureholdings.realword_backend.constant.TokenConstant;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringUtil {
   public static String replaceAllSpecialCharacter(String value, String replace, boolean isStrip) {
     //  1. 특수문자들을 -로 변환
@@ -12,5 +17,9 @@ public class StringUtil {
     }
 
     return result;
+  }
+
+  public static String getToken(String tokenHeader) {
+    return tokenHeader.substring(TokenConstant.TOKEN_HEADER_PREFIX.length());
   }
 }

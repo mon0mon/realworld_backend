@@ -39,7 +39,7 @@ public class SecurityConfiguration {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
       CustomAuthorizationFilter customAuthorizationFilter) throws Exception {
-    httpSecurity.authorizeHttpRequests((authz) ->
+    httpSecurity.authorizeHttpRequests(authz ->
         authz
             .requestMatchers("/*").permitAll()
             .requestMatchers("/h2-console/**").permitAll()
@@ -48,6 +48,7 @@ public class SecurityConfiguration {
             .requestMatchers("/articles").permitAll()
             .requestMatchers("/articles/*").permitAll()
             .requestMatchers("/tags").permitAll()
+            .requestMatchers("/articles/*/comments").permitAll()
             .anyRequest().authenticated());
 
     httpSecurity.csrf(AbstractHttpConfigurer::disable);
