@@ -3,6 +3,8 @@ package kr.neoventureholdings.realword_backend.article.repository;
 import jakarta.persistence.criteria.*;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestParamDto;
+import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
+import kr.neoventureholdings.realword_backend.tag.domains.Tag;
 import org.springframework.data.jpa.domain.Specification;
 
 public class ArticleSpecification {
@@ -16,11 +18,13 @@ public class ArticleSpecification {
       }
 
       if (paramDto.getTag() != null) {
-        //  TODO Tag Entity 추가 후에 작업 진행할 것
+        Join<Article, Tag> tags = root.join("tags", JoinType.INNER);
+        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(tags.get("value"), paramDto.getTag()));
       }
 
-      if (paramDto.getFavoritedByUsername() != null) {
-        //  TODO Favorite Entity 추가 후에 작업 진행할 것
+      if (paramDto.getFavorited() != null) {
+        Join<Article, Favorite> favorites = root.join("favorites", JoinType.INNER);
+        predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(favorites.get("user").get("profile").get("username"), paramDto.getFavorited()));
       }
 
       return predicate;

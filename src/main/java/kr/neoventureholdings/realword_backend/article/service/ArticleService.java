@@ -1,5 +1,7 @@
 package kr.neoventureholdings.realword_backend.article.service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import kr.neoventureholdings.realword_backend.article.domains.Article;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleDto;
@@ -17,6 +19,8 @@ import kr.neoventureholdings.realword_backend.exception.common.UniqueConstraintV
 import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
 import kr.neoventureholdings.realword_backend.favorite.dto.FavoriteDto;
 import kr.neoventureholdings.realword_backend.favorite.service.FacadeFavoriteService;
+import kr.neoventureholdings.realword_backend.tag.domains.Tag;
+import kr.neoventureholdings.realword_backend.tag.service.FacadeTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,12 +40,12 @@ public class ArticleService {
   private final ArticleRepository articleRepository;
   private final FacadeUserService facadeUserService;
   private final FacadeFavoriteService favoriteService;
+  private final FacadeTagService facadeTagService;
 
   public Article getArticle(String slug) {
     return getArticleBySlug(slug);
   }
 
-  //  TODO 필터링 옵션을 어떻게 적용할 것인지 고민해보고 구현하기
   public Page<Article> getArticles(ArticleRequestParamDto paramDto) {
     Pageable pageable = PageRequest.of(paramDto.getOffset(), paramDto.getLimit(),
         Sort.by(Direction.DESC, "id"));
@@ -49,10 +53,19 @@ public class ArticleService {
     return articleRepository.findAll(specification, pageable);
   }
 
+  @Transactional
   public Article saveArticle(ArticleRequestDto articleRequestDto, CustomUserDetail userDetail) {
     User user = facadeUserService.getCurrentUser(userDetail);
 
     Article article = extractRequestDtoToEntity(articleRequestDto, user);
+
+    List<Tag> tagList = articleRequestDto.getTagList()
+        .stream()
+        .map(tagValue -> new Tag(null, tagValue, null))
+        .toList();
+    tagList = facadeTagService.saveTags(tagList);
+
+    article.setTags(new HashSet<>(tagList));
 
     return articleRepository.save(article);
   }
@@ -144,6 +157,7 @@ public class ArticleService {
   private Article extractRequestDtoToEntity(ArticleRequestDto articleRequestDto, User user) {
     ArticleDto articleDto = ArticleDto.of(articleRequestDto);
     Article article = Article.of(articleDto, user);
+
     return article;
   }
 

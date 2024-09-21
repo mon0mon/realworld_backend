@@ -10,7 +10,7 @@ X-Requested-With: XMLHttpRequest
 #Authorization: Token {{auth_token}}
 
 ### Articles by Author celeb
-GET {{host}}/articles?author={{article.default.author}}
+GET {{host}}/articles?author={{article.filter.author}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
@@ -20,12 +20,22 @@ Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ### Articles Favorited by Username
-GET {{host}}/articles?favorited={{article.default.favorited}}
+GET {{host}}/articles?favorited={{article.filter.favorited}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
 ### Articles by Tag
-GET {{host}}/articles?tag={{article.default.tag}}
+GET {{host}}/articles?tag={{article.filter.tag}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Limit and offset
+GET {{host}}/articles?offset={{article.filter.offset}}&limit={{article.filter.limit}}
+Content-Type: application/json
+X-Requested-With: XMLHttpRequest
+
+### Articles by Limit and offset out of range
+GET {{host}}/articles?offset={{article.filter.outOfRange.offset}}&limit={{article.filter.outOfRange.limit}}
 Content-Type: application/json
 X-Requested-With: XMLHttpRequest
 
