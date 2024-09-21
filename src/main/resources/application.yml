@@ -21,6 +21,8 @@ spring:
 #        globally_quoted_identifiers: true
         format_sql: true
         show_sql: true
+        query:
+          fail_on_pagination_over_collection_fetch: true
     defer-datasource-initialization: true
 
   sql:
