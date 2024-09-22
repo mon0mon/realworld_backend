@@ -13,6 +13,7 @@ import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -22,6 +23,7 @@ public class ProfileService {
   private final FacadeUserService facadeUserService;
   private final FacadeFollowService facadeFollowService;
 
+  @Transactional(readOnly = true)
   public ProfileResponseDto getProfile(String username) {
     Profile profile = getProfileByUsername(username);
 
@@ -36,6 +38,7 @@ public class ProfileService {
     return profile.of(user);
   }
 
+  @Transactional
   public ProfileResponseDto followUser(String followeeUsername) {
     CustomUserDetail userDetail = SecurityUtil.getCurrentUserCustomUserdetail();
 
@@ -57,6 +60,7 @@ public class ProfileService {
     return profile.of(user);
   }
 
+  @Transactional
   public ProfileResponseDto unfollowUser(String followeeUsername) {
     CustomUserDetail userDetail = SecurityUtil.getCurrentUserCustomUserdetail();
 

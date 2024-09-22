@@ -14,6 +14,7 @@ import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -23,11 +24,13 @@ public class CommentService {
   private final FacadeUserService facadeUserService;
   private final FacadeArticleService facadeArticleService;
 
+  @Transactional(readOnly = true)
   public List<Comment> getComments(String slug) {
     Article article = facadeArticleService.getArticle(slug);
     return commentRepository.findAllByArticle(article);
   }
 
+  @Transactional
   public Comment saveComment(String slug, CommentRequestDto requestDto) {
     User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
     Article article = facadeArticleService.getArticle(slug);
@@ -41,6 +44,7 @@ public class CommentService {
     return commentRepository.save(comment);
   }
 
+  @Transactional
   public void deleteComment(String slug, Long commentId) {
     User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
     Article article = facadeArticleService.getArticle(slug);

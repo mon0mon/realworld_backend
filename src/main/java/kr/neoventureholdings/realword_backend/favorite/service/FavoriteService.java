@@ -20,11 +20,6 @@ public class FavoriteService {
   }
 
   @Transactional
-  public void deleteFavorite(FavoriteDto dto) {
-    deleteFavorite(Favorite.of(dto));
-  }
-
-  @Transactional
   public void deleteFavorite(Favorite favorite) {
     favoriteRepository.delete(favorite);
   }

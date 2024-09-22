@@ -16,10 +16,6 @@ public class FacadeFavoriteService {
     return favoriteService.saveFavorite(dto);
   }
 
-  public void deleteFavorite(FavoriteDto dto) {
-    favoriteService.deleteFavorite(dto);
-  }
-
   public void deleteFavorite(Favorite favorite) {
     favoriteService.deleteFavorite(favorite);
   }
