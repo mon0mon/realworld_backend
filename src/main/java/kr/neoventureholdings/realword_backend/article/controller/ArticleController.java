@@ -161,24 +161,34 @@ public class ArticleController {
 
   @PostMapping("/{slug}/favorite")
   public ResponseEntity<CommonResponseDto> favoriteArticle(
-      @PathVariable("slug") String slug
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
     facadeArticleService.favoriteArticle(slug);
+    User user = facadeUserService.getCurrentUser(userDetail);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
-        .body(null);
+        .body(CommonResponseDto.builder()
+            .articleResponseDto(facadeArticleService.getArticle(slug).to(user))
+            .build()
+        );
   }
 
   @DeleteMapping("/{slug}/favorite")
   public ResponseEntity<CommonResponseDto> unfavoriteArticle(
-      @PathVariable("slug") String slug
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
     facadeArticleService.unfavoriteArticle(slug);
+    User user = facadeUserService.getCurrentUser(userDetail);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
-        .body(null);
+        .body(CommonResponseDto.builder()
+            .articleResponseDto(facadeArticleService.getArticle(slug).to(user))
+            .build()
+        );
   }
 
   @GetMapping("/{slug}/comments")

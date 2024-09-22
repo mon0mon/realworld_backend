@@ -145,7 +145,7 @@ public class Article extends BaseEntity {
         .title(getTitle())
         .description(getDescription())
         .body(getBody())
-        .createAt(getCreatedAt())
+        .createdAt(getCreatedAt())
         .updatedAt(getUpdatedAt())
         .favorited(
             getFavorites()

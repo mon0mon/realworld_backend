@@ -1,5 +1,6 @@
 package kr.neoventureholdings.realword_backend.article.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,9 @@ public class ArticleResponseDto {
   private String title;
   private String description;
   private String body;
-  private LocalDateTime createAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+  private LocalDateTime createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private LocalDateTime updatedAt;
   private Boolean favorited;
   private Integer favoritesCount;

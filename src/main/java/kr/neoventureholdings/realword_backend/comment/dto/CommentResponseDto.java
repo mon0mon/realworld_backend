@@ -1,5 +1,6 @@
 package kr.neoventureholdings.realword_backend.comment.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
@@ -21,7 +22,9 @@ public class CommentResponseDto {
   private String body;
   @JsonProperty("author")
   private ProfileResponseDto author;
-  private LocalDateTime createAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+  private LocalDateTime createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
   private LocalDateTime updatedAt;
 
   public static CommentResponseDto of(Comment comment, User user) {
@@ -29,7 +32,7 @@ public class CommentResponseDto {
         .id(comment.getId())
         .body(comment.getBody())
         .author(comment.getUser().getProfile().of(user))
-        .createAt(comment.getCreatedAt())
+        .createdAt(comment.getCreatedAt())
         .updatedAt(comment.getUpdatedAt())
         .build();
   }

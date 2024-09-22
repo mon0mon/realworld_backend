@@ -2,7 +2,6 @@ package kr.neoventureholdings.realword_backend.auth.controller;
 
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
-import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
 import kr.neoventureholdings.realword_backend.common.dto.CommonResponseDto;
@@ -15,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -92,16 +90,14 @@ public class AuthController {
    */
   @PutMapping("/user")
   public ResponseEntity<CommonResponseDto> updateUser(
-      @RequestBody CommonRequestDto commonRequestDto,
-      @RequestAttribute("access_token") String accessToken) {
-    UserResponseDto userResponseDto = facadeUserService.update(commonRequestDto.getUser(),
-        accessToken).to();
+      @RequestBody CommonRequestDto commonRequestDto) {
+    User user = facadeUserService.update(commonRequestDto.getUser());
     return ResponseEntity
         .ok()
         .body(
             CommonResponseDto
                 .builder()
-                .userResponseDto(userResponseDto)
+                .userResponseDto(facadeUserService.getUserResponseDto(user))
                 .build()
         );
   }
