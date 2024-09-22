@@ -8,6 +8,7 @@ import kr.neoventureholdings.realword_backend.config.security.authentication.Cus
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.exception.auth.UserLoginException;
 import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
+import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,14 +47,10 @@ public class UserService {
   }
 
   @Transactional
-  public User update(UserRequestDto requestDto, String accessToken) {
-    User user = fromAccessToken(accessToken);
+  public User update(UserRequestDto requestDto) {
+    User user = getUser(SecurityUtil.getCurrentUserCustomUserdetail());
     user = user.of(requestDto, passwordEncoder);
     return userRepository.save(user);
-  }
-
-  private User fromAccessToken(String accessToken) {
-    return findUserById(jwtTokenProvider.decodeToken(accessToken).getUserId());
   }
 
   public String getAccessToken(User user) {
