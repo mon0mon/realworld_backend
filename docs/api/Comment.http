@@ -6,9 +6,14 @@ Authorization: Token {{auth_token}}
 
 {
   "comment": {
-    "body": "Thank you so much!"
+    "body": "{{comment.body}}"
   }
 }
+
+> {%
+  client.log(response.body);
+  client.global.set("comment.commentId", response.body.comment.id);
+%}
 
 ### All Comments for Article
 GET {{host}}/articles/{{comment.slug}}/comments

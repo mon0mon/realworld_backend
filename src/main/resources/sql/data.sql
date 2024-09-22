@@ -142,3 +142,24 @@ where t.tag_value = 'Java';
 insert into follow (followee_user_id, follower_user_id)
 values ((select id from users where email like 'celeb@example.com'),
         (select id from users where email like 'user1@example.com'));
+
+-- Comment
+insert into comment (user_id, article_id, body, created_at, updated_at)
+values ((select id from users where email like 'celeb@example.com'),
+        (select id from article where slug like 'node-js'),
+        'Hello World!', current_timestamp, current_timestamp);
+
+insert into comment (user_id, article_id, body, created_at, updated_at)
+values ((select id from users where email like 'celeb@example.com'),
+    (select id from article where slug like 'node-js'),
+    'I like java!', current_timestamp, current_timestamp);
+
+insert into comment (user_id, article_id, body, created_at, updated_at)
+values ((select id from users where email like 'celeb@example.com'),
+    (select id from article where slug like 'node-js'),
+    'I like kotlin!', current_timestamp, current_timestamp);
+
+insert into comment (user_id, article_id, body, created_at, updated_at)
+values ((select id from users where email like 'celeb@example.com'),
+    (select id from article where slug like 'node-js'),
+    'I like go!', current_timestamp, current_timestamp);
