@@ -12,4 +12,5 @@ public class AuthTestConstant {
   public static final String UPDATE_PASSWORD = "qwe";
   public static final String UPDATE_BIO = "Hello World!";
   public static final String UPDATE_IMAGE = "https://static-00.iconduck.com/assets.00/person-icon-2048x2048-wiaps1jt.png";
+  public static final String CELEB_EMAIL = "celeb@example.com";
 }
