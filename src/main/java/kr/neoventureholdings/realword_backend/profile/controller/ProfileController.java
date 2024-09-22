@@ -29,12 +29,11 @@ public class ProfileController {
    * @return
    */
   @GetMapping("/{username}")
-  public ResponseEntity<CommonResponseDto> getProfile(@PathVariable("username") String username,
-      @AuthenticationPrincipal CustomUserDetail customUserDetail) {
+  public ResponseEntity<CommonResponseDto> getProfile(@PathVariable("username") String username) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
-            .profileResponseDto(profileService.getProfile(username, customUserDetail))
+            .profileResponseDto(profileService.getProfile(username))
             .build()
         );
   }
@@ -43,16 +42,14 @@ public class ProfileController {
    * 주어진 username에 해당하는 이용자를 follow
    *
    * @param username
-   * @param customUserDetail
    * @return
    */
   @PostMapping("/{username}/follow")
-  public ResponseEntity<CommonResponseDto> followProfile(@PathVariable("username") String username,
-      @AuthenticationPrincipal CustomUserDetail customUserDetail) {
+  public ResponseEntity<CommonResponseDto> followProfile(@PathVariable("username") String username) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
-            .profileResponseDto(profileService.followUser(username, customUserDetail))
+            .profileResponseDto(profileService.followUser(username))
             .build()
         );
   }
@@ -61,17 +58,15 @@ public class ProfileController {
    * 주어진 username에 해당하는 이용자를 unfollow
    *
    * @param username
-   * @param customUserDetail
    * @return
    */
   @DeleteMapping("/{username}/follow")
   public ResponseEntity<CommonResponseDto> unfollowProfile(
-      @PathVariable("username") String username,
-      @AuthenticationPrincipal CustomUserDetail customUserDetail) {
+      @PathVariable("username") String username) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
-            .profileResponseDto(profileService.unfollowUser(username, customUserDetail))
+            .profileResponseDto(profileService.unfollowUser(username))
             .build()
         );
   }
