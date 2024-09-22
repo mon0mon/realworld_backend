@@ -1,5 +1,6 @@
 package kr.neoventureholdings.realword_backend.auth.controller;
 
+import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
@@ -32,12 +33,14 @@ public class AuthController {
    */
   @PostMapping("/users")
   public ResponseEntity<CommonResponseDto> registerUser(
-      @Validated(UserRequestDto.Registration.class) @RequestBody CommonRequestDto commonRequestDto) {
+      @Validated(UserRequestDto.Registration.class) @RequestBody CommonRequestDto commonRequestDto
+  ) {
     UserRequestDto userRequestDto = commonRequestDto.getUser();
+    User user = facadeUserService.register(userRequestDto);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
-            .userResponseDto(userService.register(userRequestDto))
+            .userResponseDto(facadeUserService.getUserResponseDto(user))
             .build()
         );
   }
@@ -50,12 +53,12 @@ public class AuthController {
    */
   @GetMapping("/user")
   public ResponseEntity<CommonResponseDto> getCurrentUser(@AuthenticationPrincipal CustomUserDetail userDetail) {
-    UserResponseDto userDto = userService.getCurrentUserResponseDto(userDetail);
+    User user = facadeUserService.getCurrentUser(userDetail);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
-            .userResponseDto(userDto)
+            .userResponseDto(facadeUserService.getUserResponseDto(user))
             .build()
         );
   }
@@ -68,13 +71,15 @@ public class AuthController {
   @PostMapping("/users/login")
   public ResponseEntity<CommonResponseDto> login(
       @Validated(UserRequestDto.Login.class) @RequestBody CommonRequestDto commonRequestDto) {
-    UserResponseDto userResponseDto = userService.login(commonRequestDto.getUser());
 
+    User user = facadeUserService.login(commonRequestDto.getUser());
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
-            .userResponseDto(userResponseDto)
+            .userResponseDto(
+                facadeUserService.getUserResponseDto(user)
+            )
             .build()
         );
   }
@@ -89,8 +94,8 @@ public class AuthController {
   public ResponseEntity<CommonResponseDto> updateUser(
       @RequestBody CommonRequestDto commonRequestDto,
       @RequestAttribute("access_token") String accessToken) {
-    UserResponseDto userResponseDto = userService.update(commonRequestDto.getUser(),
-        accessToken);
+    UserResponseDto userResponseDto = facadeUserService.update(commonRequestDto.getUser(),
+        accessToken).to();
     return ResponseEntity
         .ok()
         .body(

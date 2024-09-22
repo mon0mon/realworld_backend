@@ -13,32 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class FacadeUserService {
   private final UserService userService;
 
-  @Transactional
-  public UserResponseDto register(UserRequestDto userRequestDto) {
+  public User register(UserRequestDto userRequestDto) {
     return userService.register(userRequestDto);
   }
 
-  @Transactional
-  public UserResponseDto login(UserRequestDto userRequestDto) {
+  public User login(UserRequestDto userRequestDto) {
     return userService.login(userRequestDto);
   }
 
-  @Transactional
-  public UserResponseDto update(UserRequestDto userRequestDto, String accessToken) {
+  public User update(UserRequestDto userRequestDto, String accessToken) {
     return userService.update(userRequestDto, accessToken);
   }
 
-  @Transactional(readOnly = true)
-  public UserResponseDto getCurrentUserResponseDto(CustomUserDetail customUserDetail) {
-    return userService.getUserDto(customUserDetail);
-  }
-
-  @Transactional(readOnly = true)
   public User getCurrentUser(CustomUserDetail customUserDetail) {
     return userService.getUser(customUserDetail);
   }
 
-  public User getRefreshedUser(User user) {
-    return userService.getRefreshUser(user);
+  public UserResponseDto getUserResponseDto(User user) {
+    return user.to(userService.getAccessToken(user));
   }
 }
