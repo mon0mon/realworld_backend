@@ -9,6 +9,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.http.Cookie;
+import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class JwtTokenProvider {
   private static final String ACCESS_TOKEN = "access_token";
   private static final String REFRESH_TOKEN = "refresh_token";
   private final JwtConfig jwtConfig;
+
+  public AccessTokenResponseDto createAccessToken(User user) {
+    return createAccessToken(user.getId());
+  }
 
   public AccessTokenResponseDto createAccessToken(Long userId) {
     Instant expiresAt = Instant.now().plusSeconds(Long.parseLong(jwtConfig.getAccessTokenExpire()));

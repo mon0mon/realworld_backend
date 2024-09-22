@@ -28,9 +28,9 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
-  public UserResponseDto register(UserRequestDto requestDto) {
+  public User register(UserRequestDto requestDto) {
     checkUserExists(requestDto.getEmail());
-    return userRepository.save(requestDto.toUser(passwordEncoder)).to();
+    return userRepository.save(requestDto.toUser(passwordEncoder));
   }
 
   public UserResponseDto getUserDto(CustomUserDetail customUserDetail) {
@@ -42,24 +42,23 @@ public class UserService {
   }
 
   @Transactional
-  public UserResponseDto login(UserRequestDto requestDto) {
-    User user = findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
-    return user.to(getAccessToken(user.getId()));
+  public User login(UserRequestDto requestDto) {
+    return findUserByEmailAndPassword(requestDto.getEmail(), requestDto.getPassword());
   }
 
   @Transactional
-  public UserResponseDto update(UserRequestDto requestDto, String accessToken) {
+  public User update(UserRequestDto requestDto, String accessToken) {
     User user = fromAccessToken(accessToken);
     user = user.of(requestDto, passwordEncoder);
-    return userRepository.save(user).to(getAccessToken(user.getId()));
+    return userRepository.save(user);
   }
 
   private User fromAccessToken(String accessToken) {
     return findUserById(jwtTokenProvider.decodeToken(accessToken).getUserId());
   }
 
-  public AccessTokenResponseDto getAccessToken(User user) {
-    return jwtTokenProvider.createAccessToken(user.getId());
+  public String getAccessToken(User user) {
+    return getAccessToken(user.getId());
   }
 
   public String getAccessToken(Long userId) {
