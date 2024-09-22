@@ -11,7 +11,6 @@ import kr.neoventureholdings.realword_backend.article.repository.ArticleReposito
 import kr.neoventureholdings.realword_backend.article.repository.ArticleSpecification;
 import kr.neoventureholdings.realword_backend.auth.domains.User;
 import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
-import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
 import kr.neoventureholdings.realword_backend.exception.auth.NoAuthorizationException;
 import kr.neoventureholdings.realword_backend.exception.common.EntityAlreadyExistsException;
 import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;

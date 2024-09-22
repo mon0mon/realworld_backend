@@ -25,8 +25,7 @@ public class CommentService {
 
   public List<Comment> getComments(String slug) {
     Article article = facadeArticleService.getArticle(slug);
-    List<Comment> commentList = commentRepository.findAllByArticle(article);
-    return commentList;
+    return commentRepository.findAllByArticle(article);
   }
 
   public Comment saveComment(String slug, CommentRequestDto requestDto) {
