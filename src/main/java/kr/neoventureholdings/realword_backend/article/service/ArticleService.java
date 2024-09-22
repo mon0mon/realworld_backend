@@ -47,6 +47,7 @@ public class ArticleService {
     return getArticleBySlug(slug);
   }
 
+  @Transactional
   public Page<Article> getArticles(ArticleRequestParamDto paramDto) {
     Sort sort = Sort.by(Direction.DESC, "id");
     Pageable pageable = PageRequest.of(paramDto.getOffset(), paramDto.getLimit(), sort);

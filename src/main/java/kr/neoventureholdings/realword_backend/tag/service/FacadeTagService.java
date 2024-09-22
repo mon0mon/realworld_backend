@@ -17,10 +17,6 @@ public class FacadeTagService {
     return tagService.saveTags(tags);
   }
 
-  public Tag findTag(String tagValue) {
-    return tagService.findByTagValue(tagValue);
-  }
-
   public List<Tag> getTags() {
     return tagService.getTags();
   }

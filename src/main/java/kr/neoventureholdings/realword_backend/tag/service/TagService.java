@@ -3,10 +3,8 @@ package kr.neoventureholdings.realword_backend.tag.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
 import kr.neoventureholdings.realword_backend.exception.common.UniqueConstraintViolationException;
 import kr.neoventureholdings.realword_backend.tag.domains.Tag;
-import kr.neoventureholdings.realword_backend.tag.repository.TagMapRepository;
 import kr.neoventureholdings.realword_backend.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TagService {
   private final TagRepository tagRepository;
-  private final TagMapRepository tagMapRepository;
 
   @Transactional
   public List<Tag> saveTags(Collection<Tag> tags) {
@@ -37,11 +34,6 @@ public class TagService {
     }
 
     return results;
-  }
-
-  public Tag findByTagValue(String tagValue) {
-    return tagRepository.findByValue(tagValue)
-        .orElseThrow(() -> new NoSuchElementException("no such tag"));
   }
 
   public List<Tag> getTags() {

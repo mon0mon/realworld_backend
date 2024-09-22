@@ -39,27 +39,46 @@ public class ArticleController {
 
   @GetMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> getArticle(
-      @PathVariable("slug") String slug
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user;
+
+    if (userDetail == null || userDetail.isAnonymous()) {
+      user = null;
+    } else {
+      user = facadeUserService.getCurrentUser(userDetail);
+    }
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
-            .articleResponseDto(facadeArticleService.getArticle(slug).to())
+            .articleResponseDto(facadeArticleService.getArticle(slug).to(user))
             .build()
         );
   }
 
   @GetMapping
   public ResponseEntity<CommonResponseDto> getArticles(
-      @Validated @ModelAttribute ArticleRequestParamDto paramDto
+      @Validated @ModelAttribute ArticleRequestParamDto paramDto,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user;
+
+    if (userDetail == null || userDetail.isAnonymous()) {
+      user = null;
+    } else {
+      user = facadeUserService.getCurrentUser(userDetail);
+    }
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDtoList(
-                ArticleListResponseDto.of(facadeArticleService.getArticles(paramDto))
+                ArticleListResponseDto
+                    .of(facadeArticleService.getArticles(paramDto), user)
             )
             .build()
         );
@@ -67,15 +86,24 @@ public class ArticleController {
 
   @GetMapping("/feed")
   public ResponseEntity<CommonResponseDto> getFeeds(
-      @Validated @ModelAttribute ArticleRequestParamDto paramDto
+      @Validated @ModelAttribute ArticleRequestParamDto paramDto,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user;
+
+    if (userDetail == null || userDetail.isAnonymous()) {
+      user = null;
+    } else {
+      user = facadeUserService.getCurrentUser(userDetail);
+    }
     paramDto.setParamType(ArticleParamType.FEED);
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDtoList(
-                ArticleListResponseDto.of(facadeArticleService.getArticles(paramDto))
+                ArticleListResponseDto
+                    .of(facadeArticleService.getArticles(paramDto), user)
             )
             .build()
         );
@@ -83,15 +111,18 @@ public class ArticleController {
 
   @PostMapping
   public ResponseEntity<CommonResponseDto> saveArticle(
-      @Validated @RequestBody CommonRequestDto commonRequestDto
+      @Validated @RequestBody CommonRequestDto commonRequestDto,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user = facadeUserService.getCurrentUser(userDetail);
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
                 facadeArticleService.saveArticle(commonRequestDto.getArticle())
-                    .to()
+                    .to(user)
             )
             .build()
         );
@@ -100,15 +131,18 @@ public class ArticleController {
   @PutMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> updateArticle(
       @Validated @RequestBody CommonRequestDto commonRequestDto,
-      @PathVariable("slug") String slug
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user = facadeUserService.getCurrentUser(userDetail);
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
                 facadeArticleService.updateArticle(commonRequestDto.getArticle(), slug)
-                    .to()
+                    .to(user)
             )
             .build()
         );

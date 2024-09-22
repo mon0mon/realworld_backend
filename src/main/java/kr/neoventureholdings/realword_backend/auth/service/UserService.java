@@ -1,12 +1,10 @@
 package kr.neoventureholdings.realword_backend.auth.service;
 
 import kr.neoventureholdings.realword_backend.auth.domains.User;
-import kr.neoventureholdings.realword_backend.auth.dto.AccessTokenResponseDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserRequestDto;
 import kr.neoventureholdings.realword_backend.auth.dto.UserResponseDto;
 import kr.neoventureholdings.realword_backend.auth.repository.UserRepository;
 import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetail;
-import kr.neoventureholdings.realword_backend.config.security.authentication.CustomUserDetailsService;
 import kr.neoventureholdings.realword_backend.config.security.jwt.JwtTokenProvider;
 import kr.neoventureholdings.realword_backend.exception.auth.UserLoginException;
 import kr.neoventureholdings.realword_backend.exception.common.NoSuchElementException;
@@ -23,7 +21,6 @@ import org.springframework.util.StringUtils;
 public class UserService {
 
   private final JwtTokenProvider jwtTokenProvider;
-  private final CustomUserDetailsService customUserDetailsService;
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
 
@@ -33,10 +30,12 @@ public class UserService {
     return userRepository.save(requestDto.toUser(passwordEncoder));
   }
 
+  @Transactional(readOnly = true)
   public UserResponseDto getUserDto(CustomUserDetail customUserDetail) {
     return findUserByCustomUserDetail(customUserDetail).to();
   }
 
+  @Transactional
   public User getUser(CustomUserDetail customUserDetail) {
     return findUserByCustomUserDetail(customUserDetail);
   }
@@ -65,6 +64,7 @@ public class UserService {
     return jwtTokenProvider.createAccessToken(userId).getToken();
   }
 
+  @Transactional(readOnly = true)
   public User getRefreshUser(User user) {
     return userRepository.findById(user.getId())
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
