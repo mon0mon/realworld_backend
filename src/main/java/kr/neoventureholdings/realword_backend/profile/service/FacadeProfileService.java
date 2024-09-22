@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 public class FacadeProfileService {
   private final ProfileService profileService;
 
-  public ProfileResponseDto getProfile(String username, CustomUserDetail customUserDetail) {
-    return profileService.getProfile(username, customUserDetail);
+  public ProfileResponseDto getProfile(String username) {
+    return profileService.getProfile(username);
   }
 
-  public ProfileResponseDto followUser(String username, CustomUserDetail customUserDetail) {
-    return profileService.followUser(username, customUserDetail);
+  public ProfileResponseDto followUser(String username) {
+    return profileService.followUser(username);
   }
 
-  public ProfileResponseDto unfollowUser(String username, CustomUserDetail customUserDetail) {
-    return profileService.unfollowUser(username, customUserDetail);
+  public ProfileResponseDto unfollowUser(String username) {
+    return profileService.unfollowUser(username);
   }
 }

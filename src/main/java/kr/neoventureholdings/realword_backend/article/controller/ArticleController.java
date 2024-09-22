@@ -83,15 +83,14 @@ public class ArticleController {
 
   @PostMapping
   public ResponseEntity<CommonResponseDto> saveArticle(
-      @Validated @RequestBody CommonRequestDto commonRequestDto,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @Validated @RequestBody CommonRequestDto commonRequestDto
   ) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
-                facadeArticleService.saveArticle(commonRequestDto.getArticle(), userDetail)
+                facadeArticleService.saveArticle(commonRequestDto.getArticle())
                     .to()
             )
             .build()
@@ -101,15 +100,14 @@ public class ArticleController {
   @PutMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> updateArticle(
       @Validated @RequestBody CommonRequestDto commonRequestDto,
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @PathVariable("slug") String slug
   ) {
     return ResponseEntity
         .ok()
         .body(CommonResponseDto
             .builder()
             .articleResponseDto(
-                facadeArticleService.updateArticle(commonRequestDto.getArticle(), slug, userDetail)
+                facadeArticleService.updateArticle(commonRequestDto.getArticle(), slug)
                     .to()
             )
             .build()
@@ -118,10 +116,9 @@ public class ArticleController {
 
   @DeleteMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> deleteArticle(
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @PathVariable("slug") String slug
   ) {
-    facadeArticleService.deleteArticle(slug, userDetail);
+    facadeArticleService.deleteArticle(slug);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
@@ -130,10 +127,9 @@ public class ArticleController {
 
   @PostMapping("/{slug}/favorite")
   public ResponseEntity<CommonResponseDto> favoriteArticle(
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @PathVariable("slug") String slug
   ) {
-    facadeArticleService.favoriteArticle(slug, userDetail);
+    facadeArticleService.favoriteArticle(slug);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
@@ -142,10 +138,9 @@ public class ArticleController {
 
   @DeleteMapping("/{slug}/favorite")
   public ResponseEntity<CommonResponseDto> unfavoriteArticle(
-      @PathVariable("slug") String slug,
-      @AuthenticationPrincipal CustomUserDetail userDetail
+      @PathVariable("slug") String slug
   ) {
-    facadeArticleService.unfavoriteArticle(slug, userDetail);
+    facadeArticleService.unfavoriteArticle(slug);
     return ResponseEntity
         .ok()
         .contentType(MediaType.APPLICATION_JSON)
