@@ -78,10 +78,6 @@ public class ProfileService {
     return profile.of(user);
   }
 
-  private boolean isFollowing(User user, String followeeUsername) {
-    return isFollowing(user, getProfileByUsername(followeeUsername).getUser());
-  }
-
   private boolean isFollowing(User user, User targetUser) {
     return user.getFollowees()
         .stream()

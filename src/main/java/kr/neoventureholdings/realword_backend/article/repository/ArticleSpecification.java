@@ -8,8 +8,11 @@ import kr.neoventureholdings.realword_backend.favorite.domains.Favorite;
 import kr.neoventureholdings.realword_backend.follow.domains.Follow;
 import kr.neoventureholdings.realword_backend.tag.domains.Tag;
 import kr.neoventureholdings.realword_backend.util.SecurityUtil;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ArticleSpecification {
 
   public static Specification<Article> getArticlesByFilters(ArticleRequestParamDto paramDto) {

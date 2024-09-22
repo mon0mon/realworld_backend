@@ -86,11 +86,6 @@ public class UserService {
         .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
   }
 
-  private User findUserByEmail(String email) {
-    return userRepository.findByEmail(email)
-        .orElseThrow(() -> new NoSuchElementException("No Such User Element"));
-  }
-
   private boolean checkUserExists(String email) {
     assert StringUtils.hasText(email);
     return userRepository.findByEmail(email).isPresent();
