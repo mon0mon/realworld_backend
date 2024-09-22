@@ -20,8 +20,8 @@ public class FacadeUserService {
     return userService.login(userRequestDto);
   }
 
-  public User update(UserRequestDto userRequestDto, String accessToken) {
-    return userService.update(userRequestDto, accessToken);
+  public User update(UserRequestDto userRequestDto) {
+    return userService.update(userRequestDto);
   }
 
   public User getCurrentUser(CustomUserDetail customUserDetail) {
