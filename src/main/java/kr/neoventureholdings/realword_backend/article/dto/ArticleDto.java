@@ -32,7 +32,7 @@ public class ArticleDto {
         .description(requestDto.getDescription())
         .tagList(requestDto.getTagList())
         .slug(Strings.hasText(requestDto.getTitle()) ? StringUtil.replaceAllSpecialCharacter(
-            requestDto.getTitle().toLowerCase(), ArticleConstant.SLUG_SEPERATOR, true) : null
+            requestDto.getTitle().toLowerCase(), ArticleConstant.SLUG_SEPARATOR, true) : null
         )
         .build();
   }

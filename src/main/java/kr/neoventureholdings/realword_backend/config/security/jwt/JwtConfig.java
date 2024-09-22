@@ -21,7 +21,6 @@ public class JwtConfig {
   private String refreshTokenExpire;
 
   public Algorithm getEncodedSecretKey() {
-    Algorithm algorithm = HMAC256(this.secretKey.getBytes());
-    return algorithm;
+    return HMAC256(this.secretKey.getBytes());
   }
 }
