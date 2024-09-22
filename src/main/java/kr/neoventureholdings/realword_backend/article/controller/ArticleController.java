@@ -4,6 +4,8 @@ import kr.neoventureholdings.realword_backend.article.dto.ArticleListResponseDto
 import kr.neoventureholdings.realword_backend.article.dto.ArticleParamType;
 import kr.neoventureholdings.realword_backend.article.dto.ArticleRequestParamDto;
 import kr.neoventureholdings.realword_backend.article.service.FacadeArticleService;
+import kr.neoventureholdings.realword_backend.auth.domains.User;
+import kr.neoventureholdings.realword_backend.auth.service.FacadeUserService;
 import kr.neoventureholdings.realword_backend.comment.dto.CommentResponseDto;
 import kr.neoventureholdings.realword_backend.comment.service.FacadeCommentService;
 import kr.neoventureholdings.realword_backend.common.dto.CommonRequestDto;
@@ -33,6 +35,7 @@ public class ArticleController {
 
   private final FacadeArticleService facadeArticleService;
   private final FacadeCommentService facadeCommentService;
+  private final FacadeUserService facadeUserService;
 
   @GetMapping("/{slug}")
   public ResponseEntity<CommonResponseDto> getArticle(
@@ -151,14 +154,26 @@ public class ArticleController {
 
   @GetMapping("/{slug}/comments")
   public ResponseEntity<CommonResponseDto> getComments(
-      @PathVariable("slug") String slug
+      @PathVariable("slug") String slug,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user;
+
+    if (userDetail != null && !userDetail.isAnonymous()) {
+      user = facadeUserService.getCurrentUser(userDetail);
+    } else {
+      user = null;
+    }
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
             .commentResponseDtoList(
-                facadeCommentService.getComments(slug).stream().map(CommentResponseDto::of)
-                    .toList())
+                facadeCommentService.getComments(slug)
+                    .stream()
+                    .map(entity -> CommentResponseDto.of(entity, user))
+                    .toList()
+            )
             .build()
         );
   }
@@ -166,14 +181,18 @@ public class ArticleController {
   @PostMapping("/{slug}/comments")
   public ResponseEntity<CommonResponseDto> createComment(
       @PathVariable("slug") String slug,
-      @Validated @RequestBody CommonRequestDto requestDto
+      @Validated @RequestBody CommonRequestDto requestDto,
+      @AuthenticationPrincipal CustomUserDetail userDetail
   ) {
+    User user = facadeUserService.getCurrentUser(userDetail);
+
     return ResponseEntity
         .ok()
         .body(CommonResponseDto.builder()
             .commentResponseDto(
-                CommentResponseDto.of(
-                    facadeCommentService.createComment(slug, requestDto.getComment())))
+                CommentResponseDto.of(facadeCommentService
+                    .createComment(slug, requestDto.getComment()), user)
+            )
             .build()
         );
   }

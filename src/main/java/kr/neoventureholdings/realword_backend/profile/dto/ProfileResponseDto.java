@@ -12,6 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ProfileResponseDto {
+
   private String username;
   private String bio;
   private String image;
