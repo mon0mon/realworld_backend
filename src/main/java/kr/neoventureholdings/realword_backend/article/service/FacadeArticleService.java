@@ -25,27 +25,27 @@ public class FacadeArticleService {
   }
 
   @Transactional
-  public Article saveArticle(ArticleRequestDto articleRequestDto, CustomUserDetail userDetail) {
-    return articleService.saveArticle(articleRequestDto, userDetail);
+  public Article saveArticle(ArticleRequestDto articleRequestDto) {
+    return articleService.saveArticle(articleRequestDto);
   }
 
   @Transactional
-  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug, CustomUserDetail userDetail) {
-    return articleService.updateArticle(articleRequestDto, slug, userDetail);
+  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug) {
+    return articleService.updateArticle(articleRequestDto, slug);
   }
 
   @Transactional
-  public void deleteArticle(String slug, CustomUserDetail userDetail) {
-    articleService.deleteArticle(slug, userDetail);
+  public void deleteArticle(String slug) {
+    articleService.deleteArticle(slug);
   }
 
   @Transactional
-  public void favoriteArticle(String slug, CustomUserDetail userDetail) {
-    articleService.favoriteArticle(slug, userDetail);
+  public void favoriteArticle(String slug) {
+    articleService.favoriteArticle(slug);
   }
 
   @Transactional
-  public void unfavoriteArticle(String slug, CustomUserDetail userDetail) {
-    articleService.unfavoriteArticle(slug, userDetail);
+  public void unfavoriteArticle(String slug) {
+    articleService.unfavoriteArticle(slug);
   }
 }

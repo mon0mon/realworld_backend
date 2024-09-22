@@ -21,6 +21,7 @@ import kr.neoventureholdings.realword_backend.favorite.dto.FavoriteDto;
 import kr.neoventureholdings.realword_backend.favorite.service.FacadeFavoriteService;
 import kr.neoventureholdings.realword_backend.tag.domains.Tag;
 import kr.neoventureholdings.realword_backend.tag.service.FacadeTagService;
+import kr.neoventureholdings.realword_backend.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -63,8 +64,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public Article saveArticle(ArticleRequestDto articleRequestDto, CustomUserDetail userDetail) {
-    User user = facadeUserService.getCurrentUser(userDetail);
+  public Article saveArticle(ArticleRequestDto articleRequestDto) {
+    User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
 
     Article article = extractRequestDtoToEntity(articleRequestDto, user);
 
@@ -80,9 +81,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug,
-      CustomUserDetail userDetail) {
-    User user = facadeUserService.getCurrentUser(userDetail);
+  public Article updateArticle(ArticleRequestDto articleRequestDto, String slug) {
+    User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
 
     ArticleDto articleDto = ArticleDto.of(articleRequestDto);
     checkSlugIsUnique(slug, articleDto.getSlug());
@@ -99,8 +99,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public void deleteArticle(String slug, CustomUserDetail userDetail) {
-    User user = facadeUserService.getCurrentUser(userDetail);
+  public void deleteArticle(String slug) {
+    User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
 
     Article article = getArticleBySlug(slug);
 
@@ -112,8 +112,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public void favoriteArticle(String slug, CustomUserDetail userDetail) {
-    User user = facadeUserService.getCurrentUser(userDetail);
+  public void favoriteArticle(String slug) {
+    User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
 
     Article article = getArticleBySlug(slug);
 
@@ -136,8 +136,8 @@ public class ArticleService {
   }
 
   @Transactional
-  public void unfavoriteArticle(String slug, CustomUserDetail userDetail) {
-    User user = facadeUserService.getCurrentUser(userDetail);
+  public void unfavoriteArticle(String slug) {
+    User user = facadeUserService.getCurrentUser(SecurityUtil.getCurrentUserCustomUserdetail());
 
     Article article = getArticleBySlug(slug);
 
