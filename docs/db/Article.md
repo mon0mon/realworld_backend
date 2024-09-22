@@ -25,6 +25,6 @@
 - 현 프로젝트에서는 쿼리 분리 작업으로 문제 해결
 - 게시글 목록 조회 간 Pagination Query와, Entity Join Query가 별도로 나가도록 설정
   1. ArticleService에서 생성된 Specification을 @EntityGraph가 적용되지 않은 JPA Method로 실행
-  2. 리턴되는 Page<Article> 객체에서 Article Id만 추출
+  2. 리턴되는 `Page<Article>` 객체에서 Article Id만 추출
   3. @EntityGraph가 적용되는 JPA Method로 Article Id List를 실행
-  4. 리턴되는 값을 Page<Article>에 담아 리턴
+  4. 리턴되는 값을 `Page<Article>`에 담아 리턴
