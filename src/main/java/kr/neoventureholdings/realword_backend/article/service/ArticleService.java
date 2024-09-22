@@ -130,8 +130,6 @@ public class ArticleService {
         .build();
 
     article.addFavorite(favoriteDto.to());
-
-    favoriteService.saveFavorite(favoriteDto);
   }
 
   @Transactional
@@ -148,8 +146,6 @@ public class ArticleService {
             "You haven't added this article to your favorites"));
 
     article.removeFavorite(favorite);
-
-    favoriteService.deleteFavorite(favorite);
   }
 
   private Article getArticleBySlug(String slug) {
