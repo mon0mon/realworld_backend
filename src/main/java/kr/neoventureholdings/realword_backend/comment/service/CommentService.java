@@ -48,6 +48,10 @@ public class CommentService {
     Comment comment = commentRepository.findById(commentId)
         .orElseThrow(() -> new NoSuchElementException("no such comment"));
 
+    if (!comment.getArticle().equals(article)) {
+      throw new NoSuchElementException("article doesn't have given comment");
+    }
+
     if (!comment.getUser().equals(user)) {
       throw new NoAuthorizationException("no authorization to delete comment");
     }
