@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private final FacadeUserService userService;
+  private final FacadeUserService facadeUserService;
 
   /**
    * 신규 이용자 등록

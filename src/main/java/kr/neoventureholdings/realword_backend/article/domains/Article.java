@@ -138,7 +138,7 @@ public class Article extends BaseEntity {
     return this;
   }
 
-  public ArticleResponseDto to() {
+  public ArticleResponseDto to(User user) {
     return ArticleResponseDto
         .builder()
         .slug(getSlug())
@@ -153,7 +153,7 @@ public class Article extends BaseEntity {
                 .anyMatch(fav -> fav.getUser().getId().equals(SecurityUtil.getCurrentUserId()))
         )
         .favoritesCount(getFavorites().size())
-        .author(getAuthor().to())
+        .author(getAuthor().getProfile().of(user))
         .tags(getTags()
             .stream()
             .map(Tag::getValue)
